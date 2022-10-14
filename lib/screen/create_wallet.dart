@@ -73,11 +73,11 @@ class _ImportWalletState extends State<CreateWalletPage> {
                 try {
                   EasyLoading.show();
                   final mnemonic = KeyManager.generateMnemonic();
-                  await KeyManager.setMnemonic(mnemonic, _password1);
                   final localMnemonic =
                       await KeyManager.getMnemonic(_password1);
                   if (mnemonic == localMnemonic) {
                     await KeyManager.setPassword(_password1);
+                    await KeyManager.setMnemonic(mnemonic, _password1);
                     var account = AptosAccount.generateAccount(mnemonic);
                     await StorageManager.setAddress(
                         account.accountAddress.hex());
@@ -133,9 +133,10 @@ class _ImportWalletState extends State<CreateWalletPage> {
       hintText: type == 1 ? S.current.new_password1 : S.current.new_password2,
       borderRadius: 8.w,
       style: TextStyle(
-          color: AppTheme.colorFontOne,
-          fontSize: ScreenUtil.fontSize15,
-          fontWeight: FontWeight.w500),
+        color: AppTheme.colorFontOne,
+        fontSize: ScreenUtil.fontSize15,
+        fontWeight: FontWeight.w500,
+      ),
       padding: EdgeInsets.only(left: 15.w),
       showPassword: true,
       isPassword: true,

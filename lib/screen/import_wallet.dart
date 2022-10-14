@@ -186,10 +186,10 @@ class _ImportWalletState extends State<ImportWalletPage> {
       EasyLoading.show();
       var account = AptosAccount.generateAccount(_mnemonic);
       final mnemonic = KeyManager.generateMnemonic();
-      await KeyManager.setMnemonic(mnemonic, _password1);
       final localMnemonic = await KeyManager.getMnemonic(_password1);
       if (mnemonic == localMnemonic) {
         await KeyManager.setPassword(_password1);
+        await KeyManager.setMnemonic(mnemonic, _password1);
         await StorageManager.setAddress(account.accountAddress.hex());
       }
       EasyLoading.dismiss();

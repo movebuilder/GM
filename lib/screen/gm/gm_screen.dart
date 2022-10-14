@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gm/widgets/gm_tab.dart';
 import 'package:gm/widgets/gm_top.dart';
 
 class GmScreen extends StatefulWidget {

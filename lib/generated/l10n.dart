@@ -189,6 +189,76 @@ class S {
       args: [],
     );
   }
+
+  /// `Copied`
+  String get copied {
+    return Intl.message(
+      'Copied',
+      name: 'copied',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Airdrop`
+  String get airdrop {
+    return Intl.message(
+      'Airdrop',
+      name: 'airdrop',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Secret phrase`
+  String get secret_phrase {
+    return Intl.message(
+      'Secret phrase',
+      name: 'secret_phrase',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invalid password`
+  String get invalid_password {
+    return Intl.message(
+      'Invalid password',
+      name: 'invalid_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Security`
+  String get security {
+    return Intl.message(
+      'Security',
+      name: 'security',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `copy`
+  String get copy {
+    return Intl.message(
+      'copy',
+      name: 'copy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Never share the recovery phrase.\nAnyone with these words will have full access to your wallet.`
+  String get tip {
+    return Intl.message(
+      'Never share the recovery phrase.\nAnyone with these words will have full access to your wallet.',
+      name: 'tip',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

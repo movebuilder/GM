@@ -12,5 +12,12 @@
   "new_password2": "Confirm the password",
   "confirm": "Confirm",
   "enter_same_password": "Enter the same password",
-  "limit_characters": "Password length should contain minimum 6 characters"
+  "limit_characters": "Password length should contain minimum 6 characters",
+  "copied": "Copied",
+  "airdrop": "Airdrop",
+  "secret_phrase": "Secret phrase",
+  "invalid_password": "Invalid password",
+  "security": "Security",
+  "copy": "copy",
+  "tip": "Never share the recovery phrase.\nAnyone with these words will have full access to your wallet."
 }

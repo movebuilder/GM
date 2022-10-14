@@ -138,7 +138,12 @@ class _GMTextFieldState extends State<GMTextField> with WidgetsBindingObserver {
           Expanded(
             child: TextField(
               key: widget.key,
-              style: widget.style,
+              style: widget.style ??
+                  TextStyle(
+                    color: AppTheme.colorFontOne,
+                    fontSize: ScreenUtil.fontSize15,
+                    fontWeight: FontWeight.w500,
+                  ),
               controller: controller,
               keyboardType: widget.inputType,
               maxLines: widget.maxLines,
@@ -164,7 +169,7 @@ class _GMTextFieldState extends State<GMTextField> with WidgetsBindingObserver {
               decoration: InputDecoration(
                   hintText: widget.hintText,
                   hintStyle: TextStyle(
-                      color: AppTheme.colorHint,
+                      color: AppTheme.colorGreyTwo,
                       fontSize: ScreenUtil.fontSize15,
                       fontWeight: FontWeight.w400),
                   contentPadding: EdgeInsets.only(bottom: -3),

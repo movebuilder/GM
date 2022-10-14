@@ -22,7 +22,10 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "airdrop": MessageLookupByLibrary.simpleMessage("Airdrop"),
         "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
+        "copied": MessageLookupByLibrary.simpleMessage("Copied"),
+        "copy": MessageLookupByLibrary.simpleMessage("copy"),
         "enter_same_password":
             MessageLookupByLibrary.simpleMessage("Enter the same password"),
         "import": MessageLookupByLibrary.simpleMessage("Import"),
@@ -33,16 +36,22 @@ class MessageLookup extends MessageLookupByLibrary {
         "import_sub2": MessageLookupByLibrary.simpleMessage(
             "Create new password to unlock your wallet"),
         "import_wallet": MessageLookupByLibrary.simpleMessage("Import Wallet"),
+        "invalid_password":
+            MessageLookupByLibrary.simpleMessage("Invalid password"),
         "limit_characters": MessageLookupByLibrary.simpleMessage(
             "Password length should contain minimum 6 characters"),
         "new_password1": MessageLookupByLibrary.simpleMessage("New password"),
         "new_password2":
             MessageLookupByLibrary.simpleMessage("Confirm the password"),
+        "secret_phrase": MessageLookupByLibrary.simpleMessage("Secret phrase"),
+        "security": MessageLookupByLibrary.simpleMessage("Security"),
         "select_nft": MessageLookupByLibrary.simpleMessage("Select NFT"),
         "select_tip": MessageLookupByLibrary.simpleMessage(
             "You haven’t NFT\non your address"),
         "show": MessageLookupByLibrary.simpleMessage("Show me"),
         "show_tip": MessageLookupByLibrary.simpleMessage(
-            "Select my NFT or photoes to show me")
+            "Select my NFT or photoes to show me"),
+        "tip": MessageLookupByLibrary.simpleMessage(
+            "Never share the recovery phrase.\nAnyone with these words will have full access to your wallet.")
       };
 }

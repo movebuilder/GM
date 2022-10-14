@@ -8,6 +8,7 @@ class LineButton extends StatefulWidget {
   final int width;
   final int height;
   final num left;
+  final num fontSize;
   final Function? onTap;
 
   LineButton({
@@ -16,6 +17,7 @@ class LineButton extends StatefulWidget {
     this.width = 300,
     this.height = 50,
     this.left = 0,
+    this.fontSize = 18,
     this.onTap,
   }) : super(key: key);
 
@@ -27,35 +29,36 @@ class _LineButtonState extends State<LineButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.only(left: widget.left.w),
-        width: widget.width.w,
-        height: widget.height.w,
-        child: OutlinedButton(
-          onPressed: () {
-            if (widget.onTap != null) {
-              widget.onTap!();
-            }
-          },
-          style: OutlinedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(6.w),
-            ),
-            shadowColor: Colors.black87,
-            side: BorderSide(width: 1.5.w, color: AppTheme.colorFontGM),
+      margin: EdgeInsets.only(left: widget.left.w),
+      width: widget.width.w,
+      height: widget.height.w,
+      child: OutlinedButton(
+        onPressed: () {
+          if (widget.onTap != null) {
+            widget.onTap!();
+          }
+        },
+        style: OutlinedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6.w),
           ),
-          child: Container(
-            width: 300.w,
-            height: 50.w,
-            alignment: Alignment.center,
-            child: Text(
-              widget.text,
-              style: TextStyle(
-                color: AppTheme.colorFontGM,
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w500,
-              ),
+          shadowColor: Colors.black87,
+          side: BorderSide(width: 1.5.w, color: AppTheme.colorFontGM),
+        ),
+        child: Container(
+          width: 300.w,
+          height: 50.w,
+          alignment: Alignment.center,
+          child: Text(
+            widget.text,
+            style: TextStyle(
+              color: AppTheme.colorFontGM,
+              fontSize: widget.fontSize.sp,
+              fontWeight: FontWeight.bold,
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

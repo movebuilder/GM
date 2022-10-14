@@ -1,26 +1,31 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gm/common/app_theme.dart';
+import 'package:gm/route/routes.dart';
 import 'package:gm/util/image_utils.dart';
 import 'package:gm/util/screen_util.dart';
 
 class GmTop extends StatelessWidget {
   final String title;
   final String balance;
+  final bool showBalance;
   final int lineWidth;
+  final int height;
 
   GmTop({
     Key? key,
     required this.title,
-    required this.balance,
+    this.balance = '',
+    this.showBalance = true,
     this.lineWidth = 48,
+    this.height = 88,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 375.w,
-      height: 88.w,
+      height: height.w,
       color: Colors.white,
       child: Stack(
         children: [
@@ -51,38 +56,70 @@ class GmTop extends StatelessWidget {
               ),
             ),
           ),
-          Positioned(
-            right: 10.w,
-            top: 47.w,
-            child: InkWell(
-              child: Padding(
-                padding: EdgeInsets.all(10.w),
-                child: Row(
-                  children: [
-                    imageUtils(
-                      'atpos.svg',
-                      width: 18.w,
-                      height: 18.w,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 7.5.w),
-                      child: Text(
-                        '$balance APT',
-                        style: TextStyle(
-                          color: AppTheme.colorFontGM,
-                          fontSize: 16.sp,
+          if (showBalance)
+            Positioned(
+              right: 10.w,
+              top: 47.w,
+              child: InkWell(
+                onTap: () {
+                  route.navigateTo(context, Routes.account);
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(10.w),
+                  child: Row(
+                    children: [
+                      imageUtils(
+                        'atpos.svg',
+                        width: 18.w,
+                        height: 18.w,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 7.5.w),
+                        child: Text(
+                          '$balance APT',
+                          style: TextStyle(
+                            color: AppTheme.colorFontGM,
+                            fontSize: 16.sp,
+                          ),
                         ),
                       ),
-                    ),
-                    imageUtils(
-                      'arrow-right.svg',
-                      width: 6.w,
-                    ),
-                  ],
+                      imageUtils(
+                        'arrow-right.svg',
+                        width: 6.w,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          )
+          if (!showBalance)
+            Positioned(
+              right: 10.w,
+              top: 46.w,
+              child: InkWell(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  padding: EdgeInsets.all(10.w),
+                  child: Icon(
+                    Icons.close,
+                    size: 22.w,
+                    color: AppTheme.colorFontFour,
+                  ),
+                ),
+              ),
+            ),
+          if (!showBalance)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Container(
+                color: Color(0x19A5AC5D),
+                height: 1.w,
+              ),
+            )
         ],
       ),
     );
