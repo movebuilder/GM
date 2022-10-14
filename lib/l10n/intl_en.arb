@@ -1,0 +1,14 @@
+{
+  "select_nft": "Select NFT",
+  "select_tip": "You haven’t NFT\non your address",
+  "show": "Show me",
+  "show_tip": "Select my NFT or photoes to show me",
+  "import": "Import",
+  "import_wallet": "Import Wallet",
+  "import_sub1": "Your secret phrase",
+  "import_sub2": "Create new password to unlock your wallet",
+  "import_hint": "Enter secret phrase",
+  "new_password1": "New password",
+  "new_password2": "Confirm the password",
+  "confirm": "Confirm"
+}
