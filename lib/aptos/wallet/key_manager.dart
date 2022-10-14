@@ -33,4 +33,18 @@ class KeyManager {
     return privateKey;
   }
 
+  static Future<bool> setPassword(String password) async {
+    bool success = await Keychain.shared.setPasswordKey(password);
+    return success;
+  }
+
+  static Future<String> getPassword() async {
+    String password = await Keychain.shared.getPasswordKey();
+    return password;
+  }
+
+  static AptosAccount getAccount(String mnemonic, {int addressIndex = 0}) {
+    return AptosAccount.generateAccount(mnemonic);
+  }
+
 }
