@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gm/common/app_theme.dart';
-import 'package:gm/screen/create_wallet.dart';
-import 'package:gm/screen/import_wallet.dart';
+import 'package:gm/route/routes.dart';
 import 'package:gm/util/image_utils.dart';
 import 'package:gm/util/screen_util.dart';
 
@@ -65,16 +63,11 @@ class _RegisterPageState extends State<RegisterPage> {
   _itemRegister(img, text) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return text == 'Import Wallet'
-                  ? ImportWalletPage()
-                  : CreateWalletPage();
-            },
-          ),
-        );
+        Routes.navigateToInFormRight(
+            context,
+            text == 'Import Wallet'
+                ? Routes.importWallet
+                : Routes.createWallet);
       },
       child: Container(
         height: 60.w,

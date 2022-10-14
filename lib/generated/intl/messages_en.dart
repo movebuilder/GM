@@ -23,6 +23,8 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
+        "enter_same_password":
+            MessageLookupByLibrary.simpleMessage("Enter the same password"),
         "import": MessageLookupByLibrary.simpleMessage("Import"),
         "import_hint":
             MessageLookupByLibrary.simpleMessage("Enter secret phrase"),
@@ -31,6 +33,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "import_sub2": MessageLookupByLibrary.simpleMessage(
             "Create new password to unlock your wallet"),
         "import_wallet": MessageLookupByLibrary.simpleMessage("Import Wallet"),
+        "limit_characters": MessageLookupByLibrary.simpleMessage(
+            "Password length should contain minimum 6 characters"),
         "new_password1": MessageLookupByLibrary.simpleMessage("New password"),
         "new_password2":
             MessageLookupByLibrary.simpleMessage("Confirm the password"),

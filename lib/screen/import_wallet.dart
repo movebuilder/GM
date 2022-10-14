@@ -1,8 +1,14 @@
+import 'package:aptos/aptos_account.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:gm/aptos/wallet/key_manager.dart';
 import 'package:gm/common/app_theme.dart';
+import 'package:gm/data/db/storage_manager.dart';
 import 'package:gm/generated/l10n.dart';
+import 'package:gm/route/routes.dart';
 import 'package:gm/util/screen_util.dart';
+import 'package:gm/util/toast_util.dart';
 import 'package:gm/widgets/gm_textfield.dart';
 import 'package:gm/widgets/line_button.dart';
 
@@ -12,12 +18,10 @@ class ImportWalletPage extends StatefulWidget {
 }
 
 class _ImportWalletState extends State<ImportWalletPage> {
-  var mnemonic = '';
-  var password1 = '';
-  var password2 = '';
-  var password3 = '';
-  var password4 = '';
-  var password5 = '';
+  var _mnemonic = '';
+  var _password1 = '';
+  var _password2 = '';
+  var _errorText = '';
 
   @override
   Widget build(BuildContext context) {
@@ -92,14 +96,13 @@ class _ImportWalletState extends State<ImportWalletPage> {
       showPassword: true,
       isPassword: true,
       height: 56.w,
-      text: type == 1 ? password1 : password2,
+      text: type == 1 ? _password1 : _password2,
       leftIcon: 'assets/svgs/password.svg',
       onChange: (value) {
-        if (type == 1) {
-          password1 = value;
-        } else {
-          password2 = value;
-        }
+        type == 1 ? _password1 = value : _password2 = value;
+        setState(() {
+          _errorText = '';
+        });
       },
     );
   }
@@ -115,15 +118,19 @@ class _ImportWalletState extends State<ImportWalletPage> {
             hintText: S.current.import_hint,
             borderRadius: 8.w,
             maxLines: 4,
+            showClear: false,
             style: TextStyle(
                 color: AppTheme.colorFontOne,
                 fontSize: ScreenUtil.fontSize15,
                 fontWeight: FontWeight.w500),
             padding: EdgeInsets.symmetric(horizontal: 15.w),
             height: 100.w,
-            text: mnemonic,
+            text: _mnemonic,
             onChange: (value) {
-              mnemonic = value;
+              _mnemonic = value;
+              setState(() {
+                _errorText = '';
+              });
             },
           ),
           _subTitle(S.current.import_sub2),
@@ -131,6 +138,15 @@ class _ImportWalletState extends State<ImportWalletPage> {
           SizedBox(height: 20.w),
           _itemPassword(2, S.current.new_password2),
           SizedBox(height: 20.w),
+          Text(
+            _errorText,
+            style: TextStyle(
+              color: AppTheme.colorRed,
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w500,
+              height: 1.3,
+            ),
+          ),
         ],
       ),
     );
@@ -142,8 +158,51 @@ class _ImportWalletState extends State<ImportWalletPage> {
       child: LineButton(
         text: S.current.import,
         left: 10.5,
-        onTap: () {},
+        onTap: () {
+          if (_mnemonic.isEmpty) {
+            ToastUtil.show(S.current.import_hint);
+          } else if (_password1.isEmpty) {
+            ToastUtil.show(S.current.new_password1);
+          } else if (_password2.isEmpty) {
+            ToastUtil.show(S.current.new_password2);
+          } else if (_password1.length < 6 || _password1.length < 6) {
+            setState(() {
+              _errorText = S.current.limit_characters;
+            });
+          } else if (_password1 != _password2) {
+            setState(() {
+              _errorText = S.current.enter_same_password;
+            });
+          } else {
+            _import();
+          }
+        },
       ),
     );
+  }
+
+  _import() async {
+    try {
+      EasyLoading.show();
+      var account = AptosAccount.generateAccount(_mnemonic);
+      final mnemonic = KeyManager.generateMnemonic();
+      await KeyManager.setMnemonic(mnemonic, _password1);
+      final localMnemonic = await KeyManager.getMnemonic(_password1);
+      if (mnemonic == localMnemonic) {
+        await KeyManager.setPassword(_password1);
+        await StorageManager.setAddress(account.accountAddress.hex());
+      }
+      EasyLoading.dismiss();
+      route.navigateTo(context, Routes.root, clearStack: true);
+    } catch (e) {
+      print(e);
+      EasyLoading.dismiss();
+      if (e is ArgumentError) {
+        _errorText = e.message;
+      } else {
+        _errorText = e.toString();
+      }
+      setState(() {});
+    }
   }
 }

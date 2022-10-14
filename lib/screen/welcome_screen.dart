@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper_plus/flutter_swiper_plus.dart';
 import 'package:gm/common/app_theme.dart';
-import 'package:gm/screen/register_page.dart';
+import 'package:gm/route/routes.dart';
 import 'package:gm/util/screen_util.dart';
 import 'package:gm/widgets/line_button.dart';
 
@@ -75,14 +75,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               text: 'GM NOW',
               left: 1.5,
               onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return RegisterPage();
-                    },
-                  ),
-                );
+                Routes.navigateToInFormRight(context, Routes.register,
+                    replace: true);
               },
             ),
           ],

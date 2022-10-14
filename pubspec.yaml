@@ -32,14 +32,16 @@ dependencies:
   cached_network_image: 3.2.0
   flutter_swiper_plus: 2.0.4
   flutter_keyboard_visibility: ^5.2.0
+  flutter_easyloading: 3.0.5
+  fluro: ^2.0.3
   flutter_svg: ^1.0.3
   permission_handler: ^9.1.0
   image_cropper: ^1.5.1
   flutter_secure_storage: ^6.0.0
+  shared_preferences: 2.0.15
   aptos:
-    git:
-      url: https://github.com/movebuilder/aptos.git
-      ref: 2876241b07ddf4ab4262ff72865e3bef629c9776
+    path: ../aptos
+  oktoast: 3.1.5
 
 dev_dependencies:
   flutter_test:

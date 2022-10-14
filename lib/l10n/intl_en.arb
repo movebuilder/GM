@@ -10,5 +10,7 @@
   "import_hint": "Enter secret phrase",
   "new_password1": "New password",
   "new_password2": "Confirm the password",
-  "confirm": "Confirm"
+  "confirm": "Confirm",
+  "enter_same_password": "Enter the same password",
+  "limit_characters": "Password length should contain minimum 6 characters"
 }

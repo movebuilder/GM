@@ -18,6 +18,8 @@ abstract class AppTheme {
 
   static const colorWhite = Color(0xffffffff);
 
+  static const colorRed = Color(0xffFF5C00);
+
   static const colorHint = Color(0xffA5AC5D);
 
   static const colorBtnGradientStart = Color(0xffbefb3c);

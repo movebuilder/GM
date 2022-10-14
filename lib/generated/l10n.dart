@@ -169,6 +169,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Enter the same password`
+  String get enter_same_password {
+    return Intl.message(
+      'Enter the same password',
+      name: 'enter_same_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password length should contain minimum 6 characters`
+  String get limit_characters {
+    return Intl.message(
+      'Password length should contain minimum 6 characters',
+      name: 'limit_characters',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
