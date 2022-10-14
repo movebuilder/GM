@@ -39,9 +39,11 @@ dependencies:
   image_cropper: ^1.5.1
   flutter_secure_storage: ^6.0.0
   shared_preferences: 2.0.15
-  aptos:
-    path: ../aptos
   oktoast: 3.1.5
+  aptos:
+    git:
+      url: https://github.com/movebuilder/aptos.git
+      ref: 6c92a8f772b9ff664e3fe704bf1b63361d800767
 
 dev_dependencies:
   flutter_test:
