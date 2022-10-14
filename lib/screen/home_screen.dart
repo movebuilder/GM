@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gm/common/app_theme.dart';
-import 'package:gm/generated/l10n.dart';
+import 'package:gm/screen/chat/chat_screen.dart';
+import 'package:gm/screen/gm/gm_screen.dart';
 import 'package:gm/util/screen_util.dart';
+import 'package:gm/widgets/gm_tab.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -9,6 +10,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final gm = GmScreen();
+  final chat = ChatScreen();
+  var activeTab = AppTab.gm;
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.getInstance()
@@ -16,17 +21,18 @@ class _HomeScreenState extends State<HomeScreen> {
       ..height = 812
       ..init(context);
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          S.current.show,
-          style: TextStyle(
-            color: AppTheme.colorFontOne,
-            fontSize: 18.sp,
-          ),
-        ),
+      body: IndexedStack(
+        children: <Widget>[gm, chat],
+        index: AppTab.values.indexOf(activeTab),
       ),
-      body: Container(),
+      bottomNavigationBar: GmTab(
+          activeTab: activeTab,
+          unRead: 10,
+          onTabSelected: (tab) {
+            setState(() {
+              activeTab = tab;
+            });
+          }),
     );
   }
 }

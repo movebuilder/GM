@@ -22,9 +22,9 @@ abstract class AppTheme {
 
   static const colorHint = Color(0xffA5AC5D);
 
-  static const colorBtnGradientStart = Color(0xffbefb3c);
+  static const colorBtnGradientStart = Color(0xffDBFF00);
 
-  static const colorBtnGradientEnd = Color(0xffeef13a);
+  static const colorBtnGradientEnd = Color(0xffFAFF00);
 
   static const colorGreyOne = Color(0xffededed);
 
