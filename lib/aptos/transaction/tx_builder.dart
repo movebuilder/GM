@@ -71,6 +71,8 @@ class TxBuilder {
     return result;
   }
 
+  /// CHAT MESSAGE ///
+
   Future<List<ChatMessage>> getMessages(String address) async {
     final accountResource = await client.getAccountResouce(
         address,
@@ -157,6 +159,24 @@ class TxBuilder {
     return result;
   }
 
+  Future<bool> isPending(String txHash) async {
+    return await client.transactionPending(txHash);
+  }
+
+  Future<BigInt> estimateGasAmount(TransactionRequest tx) async {
+    final gasAmount = await client.estimateGasAmount(tx);
+    return gasAmount;
+  }
+
+  Future<int> gasPrice() async {
+    final gasPrice = await client.estimateGasPrice();
+    return gasPrice;
+  }
+
+  Future<BigInt> estimateGasPrice(TransactionRequest tx) async {
+    final gasPrice = await client.estimateGasUnitPrice(tx);
+    return gasPrice;
+  }
 
   Future<dynamic> _submitTx(
       AptosAccount sender,
