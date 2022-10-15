@@ -19,5 +19,17 @@
   "invalid_password": "Invalid password",
   "security": "Security",
   "copy": "copy",
-  "tip": "Never share the recovery phrase.\nAnyone with these words will have full access to your wallet."
+  "unmatch": "unmatch",
+  "new_match": "New Match",
+  "gm_now": "GM NOW",
+  "tip": "Never share the recovery phrase.\nAnyone with these words will have full access to your wallet.",
+  "approve":"Approve",
+  "approve_request":"Approve Request",
+  "details":"Transaction details",
+  "tokens":"Tokens",
+  "gas_fee":"Estimated gas fee",
+  "address":"Address",
+  "function":"Function",
+  "message":"Message",
+  "cancel":"Cancel"
 }

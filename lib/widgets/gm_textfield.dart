@@ -10,6 +10,7 @@ class GMTextField extends StatefulWidget {
   final double? width;
   final double? height;
   final String? hintText;
+  final Color? hintColor;
   final FocusNode? focusNode;
   final int? maxLength;
   final int maxLines;
@@ -33,6 +34,7 @@ class GMTextField extends StatefulWidget {
       {Key? key,
       required this.text,
       this.hintText,
+      this.hintColor,
       this.width,
       this.height,
       this.focusNode,
@@ -169,7 +171,7 @@ class _GMTextFieldState extends State<GMTextField> with WidgetsBindingObserver {
               decoration: InputDecoration(
                   hintText: widget.hintText,
                   hintStyle: TextStyle(
-                      color: AppTheme.colorGreyTwo,
+                      color: widget.hintColor ?? AppTheme.colorGreyTwo,
                       fontSize: ScreenUtil.fontSize15,
                       fontWeight: FontWeight.w400),
                   contentPadding: EdgeInsets.only(bottom: -3),

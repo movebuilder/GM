@@ -7,8 +7,6 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  var _balance = '--';
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -16,7 +14,6 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           GmTop(
             title: 'Chat',
-            balance: _balance,
             lineWidth: 60,
           ),
         ],

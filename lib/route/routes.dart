@@ -26,6 +26,10 @@ class Routes {
 
   static String secretPhrase = "/secretPhrase";
 
+  static String chat = "/chat";
+
+  static String approve = "/approve";
+
   static void configureRoutes(FluroRouter router) {
     router.notFoundHandler = new Handler(
         handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
@@ -40,6 +44,8 @@ class Routes {
     router.define(Routes.account, handler: accountHandler);
     router.define(Routes.security, handler: securityHandler);
     router.define(Routes.secretPhrase, handler: secretPhraseHandler);
+    router.define(Routes.chat, handler: chatHandler);
+    router.define(Routes.approve, handler: approveHandler);
   }
 
   static Future<dynamic> navigateToInFormRight(

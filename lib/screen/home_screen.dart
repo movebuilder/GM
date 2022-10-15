@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gm/screen/chat/chat_screen.dart';
+import 'package:focus_detector/focus_detector.dart';
+import 'package:gm/aptos/transaction/tx_builder.dart';
+import 'package:gm/data/db/storage_manager.dart';
+import 'package:gm/screen/chat/chat_list_screen.dart';
 import 'package:gm/screen/gm/gm_screen.dart';
 import 'package:gm/util/screen_util.dart';
 import 'package:gm/widgets/gm_tab.dart';
@@ -11,8 +14,23 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final gm = GmScreen();
-  final chat = ChatScreen();
+  final chat = ChatListScreen();
   var activeTab = AppTab.gm;
+  late TxBuilder builder;
+
+  @override
+  void initState() {
+    super.initState();
+    builder = TxBuilder();
+  }
+
+  void getBalance() async {
+    final builder = TxBuilder();
+    final result =
+        await builder.getBalanceByAddress(StorageManager.getAddress());
+    gm.setBalance(result);
+    chat.setBalance(result);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +39,14 @@ class _HomeScreenState extends State<HomeScreen> {
       ..height = 812
       ..init(context);
     return Scaffold(
-      body: IndexedStack(
-        children: <Widget>[gm, chat],
-        index: AppTab.values.indexOf(activeTab),
+      body: FocusDetector(
+        onFocusGained: () {
+          getBalance();
+        },
+        child: IndexedStack(
+          children: <Widget>[gm, chat],
+          index: AppTab.values.indexOf(activeTab),
+        ),
       ),
       bottomNavigationBar: GmTab(
           activeTab: activeTab,

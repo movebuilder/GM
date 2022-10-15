@@ -87,6 +87,7 @@ class _ImportWalletState extends State<ImportWalletPage> {
   _itemPassword(type, hintText) {
     return GMTextField(
       hintText: hintText,
+      hintColor: AppTheme.colorHint,
       borderRadius: 8.w,
       style: TextStyle(
           color: AppTheme.colorFontOne,
@@ -116,6 +117,7 @@ class _ImportWalletState extends State<ImportWalletPage> {
           _subTitle(S.current.import_sub1),
           GMTextField(
             hintText: S.current.import_hint,
+            hintColor: AppTheme.colorHint,
             borderRadius: 8.w,
             maxLines: 4,
             showClear: false,
@@ -185,15 +187,15 @@ class _ImportWalletState extends State<ImportWalletPage> {
     try {
       EasyLoading.show();
       var account = AptosAccount.generateAccount(_mnemonic);
-      final mnemonic = KeyManager.generateMnemonic();
+      await KeyManager.setMnemonic(_mnemonic, _password1);
       final localMnemonic = await KeyManager.getMnemonic(_password1);
-      if (mnemonic == localMnemonic) {
+      if (_mnemonic == localMnemonic) {
         await KeyManager.setPassword(_password1);
-        await KeyManager.setMnemonic(mnemonic, _password1);
+        await KeyManager.setMnemonic(_mnemonic, _password1);
         await StorageManager.setAddress(account.accountAddress.hex());
       }
       EasyLoading.dismiss();
-      route.navigateTo(context, Routes.root, clearStack: true);
+      route.navigateTo(context, Routes.root, replace: true);
     } catch (e) {
       print(e);
       EasyLoading.dismiss();

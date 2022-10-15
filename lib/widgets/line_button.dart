@@ -9,6 +9,7 @@ class LineButton extends StatefulWidget {
   final int height;
   final num left;
   final num fontSize;
+  final Color borderColor;
   final Function? onTap;
 
   LineButton({
@@ -18,6 +19,7 @@ class LineButton extends StatefulWidget {
     this.height = 50,
     this.left = 0,
     this.fontSize = 18,
+    this.borderColor = AppTheme.colorFontGM,
     this.onTap,
   }) : super(key: key);
 
@@ -43,7 +45,7 @@ class _LineButtonState extends State<LineButton> {
             borderRadius: BorderRadius.circular(6.w),
           ),
           shadowColor: Colors.black87,
-          side: BorderSide(width: 1.5.w, color: AppTheme.colorFontGM),
+          side: BorderSide(width: 1.5.w, color: widget.borderColor),
         ),
         child: Container(
           width: 300.w,

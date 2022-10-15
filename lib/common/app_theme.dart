@@ -22,9 +22,9 @@ abstract class AppTheme {
 
   static const colorHint = Color(0xffA5AC5D);
 
-  static const colorBtnGradientStart = Color(0xffDBFF00);
+  static const colorBtnGradientStart = Color(0xFF8FFA3B);
 
-  static const colorBtnGradientEnd = Color(0xffFAFF00);
+  static const colorBtnGradientEnd = Color(0xFFF2DD21);
 
   static const colorGreyOne = Color(0xffededed);
 
@@ -36,7 +36,7 @@ abstract class AppTheme {
         primaryColor: primaryColor,
         backgroundColor: backgroundColor,
         scaffoldBackgroundColor: backgroundColor,
-        splashColor: primaryColor,
+        splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
         hintColor: colorFontGM,
         appBarTheme: const AppBarTheme(

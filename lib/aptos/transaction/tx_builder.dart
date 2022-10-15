@@ -1,6 +1,4 @@
-
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:aptos/aptos.dart';
@@ -11,6 +9,7 @@ import 'package:aptos/models/signature.dart';
 import 'package:aptos/models/table_item.dart';
 import 'package:aptos/models/transaction.dart';
 import 'package:ed25519_edwards/ed25519_edwards.dart' as ed25519;
+import 'package:decimal/decimal.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gm/aptos/transaction/chat_message.dart';
 
@@ -27,11 +26,12 @@ class TxBuilder {
     coinClient = CoinClient(client);
   }
 
-  Future<BigInt> getBalanceByAddress(String address) async {
-    return await coinClient.checkBalance(address);
+  Future<Decimal> getBalanceByAddress(String address) async {
+    var balance = await coinClient.checkBalance(address);
+    return Decimal.fromBigInt(balance) * Decimal.fromInt(10).pow(-8);
   }
 
-  Future<BigInt> getBalanceByAccount(AptosAccount account) async {
+  Future<Decimal> getBalanceByAccount(AptosAccount account) async {
     return await getBalanceByAddress(account.address().hex());
   }
 

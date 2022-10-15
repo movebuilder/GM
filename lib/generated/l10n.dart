@@ -250,11 +250,131 @@ class S {
     );
   }
 
+  /// `unmatch`
+  String get unmatch {
+    return Intl.message(
+      'unmatch',
+      name: 'unmatch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New Match`
+  String get new_match {
+    return Intl.message(
+      'New Match',
+      name: 'new_match',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `GM NOW`
+  String get gm_now {
+    return Intl.message(
+      'GM NOW',
+      name: 'gm_now',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Never share the recovery phrase.\nAnyone with these words will have full access to your wallet.`
   String get tip {
     return Intl.message(
       'Never share the recovery phrase.\nAnyone with these words will have full access to your wallet.',
       name: 'tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Approve`
+  String get approve {
+    return Intl.message(
+      'Approve',
+      name: 'approve',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Approve Request`
+  String get approve_request {
+    return Intl.message(
+      'Approve Request',
+      name: 'approve_request',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transaction details`
+  String get details {
+    return Intl.message(
+      'Transaction details',
+      name: 'details',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tokens`
+  String get tokens {
+    return Intl.message(
+      'Tokens',
+      name: 'tokens',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Estimated gas fee`
+  String get gas_fee {
+    return Intl.message(
+      'Estimated gas fee',
+      name: 'gas_fee',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Address`
+  String get address {
+    return Intl.message(
+      'Address',
+      name: 'address',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Function`
+  String get function {
+    return Intl.message(
+      'Function',
+      name: 'function',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Message`
+  String get message {
+    return Intl.message(
+      'Message',
+      name: 'message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel`
+  String get cancel {
+    return Intl.message(
+      'Cancel',
+      name: 'cancel',
       desc: '',
       args: [],
     );

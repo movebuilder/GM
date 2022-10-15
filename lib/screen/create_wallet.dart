@@ -6,6 +6,7 @@ import 'package:gm/common/app_theme.dart';
 import 'package:gm/data/db/storage_manager.dart';
 import 'package:gm/generated/l10n.dart';
 import 'package:gm/route/routes.dart';
+import 'package:gm/util/image_utils.dart';
 import 'package:gm/util/screen_util.dart';
 import 'package:gm/widgets/gm_textfield.dart';
 import 'package:gm/widgets/line_button.dart';
@@ -36,9 +37,28 @@ class _ImportWalletState extends State<CreateWalletPage> {
         ),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           _title(),
+          SizedBox(height: 135.w),
+          imageUtils(
+            'atpos.svg',
+            width: 70.w,
+            height: 70.w,
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              top: 10.w,
+              bottom: 28.w,
+            ),
+            child: Text(
+              'APTOS Wallet',
+              style: TextStyle(
+                color: AppTheme.colorFontGM,
+                fontSize: 14.sp,
+              ),
+            ),
+          ),
           _subTitle('Create new password to unlock your wallet'),
           _itemPassword(1),
           SizedBox(height: 20.w),
@@ -59,38 +79,8 @@ class _ImportWalletState extends State<CreateWalletPage> {
           )),
           LineButton(
             text: 'Create',
-            left: 10.5,
-            onTap: () async {
-              if (_password1.length < 6 || _password1.length < 6) {
-                setState(() {
-                  _errorText = S.current.limit_characters;
-                });
-              } else if (_password1 != _password2) {
-                setState(() {
-                  _errorText = S.current.enter_same_password;
-                });
-              } else {
-                try {
-                  EasyLoading.show();
-                  final mnemonic = KeyManager.generateMnemonic();
-                  final localMnemonic =
-                      await KeyManager.getMnemonic(_password1);
-                  if (mnemonic == localMnemonic) {
-                    await KeyManager.setPassword(_password1);
-                    await KeyManager.setMnemonic(mnemonic, _password1);
-                    var account = AptosAccount.generateAccount(mnemonic);
-                    await StorageManager.setAddress(
-                        account.accountAddress.hex());
-                  }
-                  EasyLoading.dismiss();
-                  route.navigateTo(context, Routes.root, replace: true);
-                } catch (e) {
-                  EasyLoading.dismiss();
-                  setState(() {
-                    _errorText = e.toString();
-                  });
-                }
-              }
+            onTap: () {
+              _createWallet();
             },
           ),
         ],
@@ -115,8 +105,9 @@ class _ImportWalletState extends State<CreateWalletPage> {
   }
 
   _subTitle(text) {
-    return Padding(
+    return Container(
       padding: EdgeInsets.only(top: 30.w, bottom: 15.w),
+      alignment: Alignment.centerLeft,
       child: Text(
         text,
         style: TextStyle(
@@ -131,6 +122,7 @@ class _ImportWalletState extends State<CreateWalletPage> {
   _itemPassword(type) {
     return GMTextField(
       hintText: type == 1 ? S.current.new_password1 : S.current.new_password2,
+      hintColor: AppTheme.colorHint,
       borderRadius: 8.w,
       style: TextStyle(
         color: AppTheme.colorFontOne,
@@ -150,5 +142,37 @@ class _ImportWalletState extends State<CreateWalletPage> {
         });
       },
     );
+  }
+
+  _createWallet() async {
+    if (_password1.length < 6 || _password1.length < 6) {
+      setState(() {
+        _errorText = S.current.limit_characters;
+      });
+    } else if (_password1 != _password2) {
+      setState(() {
+        _errorText = S.current.enter_same_password;
+      });
+    } else {
+      try {
+        EasyLoading.show();
+        final mnemonics = AptosAccount.generateMnemonic();
+        await KeyManager.setMnemonic(mnemonics, _password1);
+        final localMnemonic = await KeyManager.getMnemonic(_password1);
+        if (mnemonics == localMnemonic) {
+          await KeyManager.setPassword(_password1);
+          await KeyManager.setMnemonic(mnemonics, _password1);
+          var account = AptosAccount.generateAccount(mnemonics);
+          await StorageManager.setAddress(account.accountAddress.hex());
+        }
+        EasyLoading.dismiss();
+        route.navigateTo(context, Routes.root, replace: true);
+      } catch (e) {
+        EasyLoading.dismiss();
+        setState(() {
+          _errorText = e.toString();
+        });
+      }
+    }
   }
 }

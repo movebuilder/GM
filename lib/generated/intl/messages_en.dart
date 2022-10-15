@@ -22,12 +22,21 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "address": MessageLookupByLibrary.simpleMessage("Address"),
         "airdrop": MessageLookupByLibrary.simpleMessage("Airdrop"),
+        "approve": MessageLookupByLibrary.simpleMessage("Approve"),
+        "approve_request":
+            MessageLookupByLibrary.simpleMessage("Approve Request"),
+        "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
         "copied": MessageLookupByLibrary.simpleMessage("Copied"),
         "copy": MessageLookupByLibrary.simpleMessage("copy"),
+        "details": MessageLookupByLibrary.simpleMessage("Transaction details"),
         "enter_same_password":
             MessageLookupByLibrary.simpleMessage("Enter the same password"),
+        "function": MessageLookupByLibrary.simpleMessage("Function"),
+        "gas_fee": MessageLookupByLibrary.simpleMessage("Estimated gas fee"),
+        "gm_now": MessageLookupByLibrary.simpleMessage("GM NOW"),
         "import": MessageLookupByLibrary.simpleMessage("Import"),
         "import_hint":
             MessageLookupByLibrary.simpleMessage("Enter secret phrase"),
@@ -40,6 +49,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Invalid password"),
         "limit_characters": MessageLookupByLibrary.simpleMessage(
             "Password length should contain minimum 6 characters"),
+        "message": MessageLookupByLibrary.simpleMessage("Message"),
+        "new_match": MessageLookupByLibrary.simpleMessage("New Match"),
         "new_password1": MessageLookupByLibrary.simpleMessage("New password"),
         "new_password2":
             MessageLookupByLibrary.simpleMessage("Confirm the password"),
@@ -52,6 +63,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "show_tip": MessageLookupByLibrary.simpleMessage(
             "Select my NFT or photoes to show me"),
         "tip": MessageLookupByLibrary.simpleMessage(
-            "Never share the recovery phrase.\nAnyone with these words will have full access to your wallet.")
+            "Never share the recovery phrase.\nAnyone with these words will have full access to your wallet."),
+        "tokens": MessageLookupByLibrary.simpleMessage("Tokens"),
+        "unmatch": MessageLookupByLibrary.simpleMessage("unmatch")
       };
 }
