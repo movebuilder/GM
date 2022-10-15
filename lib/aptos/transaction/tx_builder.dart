@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:aptos/aptos.dart';
+import 'package:aptos/coin_client.dart';
 import 'package:aptos/constants.dart';
 import 'package:aptos/models/payload.dart';
 import 'package:aptos/models/signature.dart';
@@ -13,15 +14,25 @@ import 'package:ed25519_edwards/ed25519_edwards.dart' as ed25519;
 import 'package:flutter/foundation.dart';
 import 'package:gm/aptos/transaction/chat_message.dart';
 
-class TransactionBuilder {
+class TxBuilder {
 
   static const String moduleId = "0xfaf52ae1b48f945014ab1ba2798f85498995848cedfb0fbd167fada7ccb2d66e::chat";
   static const String resouceType = moduleId + "::MessageStore";
 
   late AptosClient client;
+  late CoinClient coinClient;
 
-  TransactionBuilder({String? endpoint}) {
+  TxBuilder({String? endpoint}) {
     client = AptosClient(endpoint ?? Constants.testnetAPI, enableDebugLog: true);
+    coinClient = CoinClient(client);
+  }
+
+  Future<BigInt> getBalanceByAddress(String address) async {
+    return await coinClient.checkBalance(address);
+  }
+
+  Future<BigInt> getBalanceByAccount(AptosAccount account) async {
+    return await getBalanceByAddress(account.address().hex());
   }
 
   Future<dynamic> transferAptos(

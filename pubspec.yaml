@@ -44,7 +44,7 @@ dependencies:
   aptos:
     git:
       url: https://github.com/movebuilder/aptos.git
-      ref: 6c92a8f772b9ff664e3fe704bf1b63361d800767
+      ref: 9eea635df2c20ae6aef3d2619d529dbae3d4cf6e
 
 dev_dependencies:
   flutter_test:
