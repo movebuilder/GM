@@ -1,13 +1,15 @@
+import 'package:decimal/decimal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gm/common/app_theme.dart';
 import 'package:gm/route/routes.dart';
 import 'package:gm/util/image_utils.dart';
 import 'package:gm/util/screen_util.dart';
+import 'package:gm/util/common_util.dart';
 
 class GmTop extends StatelessWidget {
   final String title;
-  final String balance;
+  final Decimal? balance;
   final bool showBalance;
   final int lineWidth;
   final int height;
@@ -15,7 +17,7 @@ class GmTop extends StatelessWidget {
   GmTop({
     Key? key,
     required this.title,
-    this.balance = '',
+    this.balance,
     this.showBalance = true,
     this.lineWidth = 48,
     this.height = 94,
@@ -76,7 +78,7 @@ class GmTop extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 7.5.w),
                         child: Text(
-                          '$balance APT',
+                          '${balance?.showBalance} APT',
                           style: TextStyle(
                             color: AppTheme.colorFontGM,
                             fontSize: 16.sp,

@@ -41,6 +41,7 @@ class _LineButtonState extends State<LineButton> {
           }
         },
         style: OutlinedButton.styleFrom(
+          primary: AppTheme.primaryColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(6.w),
           ),

@@ -1,3 +1,4 @@
+import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gm/common/app_theme.dart';
@@ -17,12 +18,13 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
-  var _balance = '--';
+  Decimal _balance = Decimal.zero;
   var _address = '';
 
   @override
   void initState() {
     super.initState();
+    _balance = StorageManager.getBalance();
     _address = StorageManager.getAddress();
   }
 
@@ -123,7 +125,7 @@ class _AccountScreenState extends State<AccountScreen> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
-            _balance,
+            _balance.showBalance,
             style: TextStyle(
               color: AppTheme.colorFontGM,
               fontWeight: FontWeight.bold,
@@ -213,7 +215,7 @@ class _AccountScreenState extends State<AccountScreen> {
           ),
           Expanded(
             child: Text(
-              "$_balance APT",
+              "${_balance.showBalance} APT",
               textAlign: TextAlign.end,
               style: TextStyle(
                 color: Colors.black,

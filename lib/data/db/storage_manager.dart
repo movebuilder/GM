@@ -1,3 +1,4 @@
+import 'package:decimal/decimal.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StorageManager {
@@ -8,6 +9,8 @@ class StorageManager {
   static const String _address = "_address";
 
   static const String _first_install = "_first_install";
+
+  static const String _account_balance = "_account_balance";
 
   static init() async {
     _sharedPreferences = await SharedPreferences.getInstance();
@@ -24,9 +27,16 @@ class StorageManager {
   static bool getFirstInstall() =>
       _sharedPreferences.getBool(_first_install) ?? true;
 
+  static Future<bool> setBalance(Decimal balance) async =>
+      await _sharedPreferences.setString(_account_balance, balance.toString());
+
+  static Decimal getBalance() =>
+      Decimal.parse(_sharedPreferences.getString(_account_balance) ?? "0");
+
   static Future<bool?> clear() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove(_address);
+    prefs.remove(_account_balance);
   }
 
   static bool login() => StorageManager.getAddress().isEmpty ? false : true;

@@ -25,11 +25,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void getBalance() async {
-    final builder = TxBuilder();
-    final result =
-        await builder.getBalanceByAddress(StorageManager.getAddress());
-    gm.setBalance(result);
-    chat.setBalance(result);
+    try {
+      final result =
+          await builder.getBalanceByAddress(StorageManager.getAddress());
+      StorageManager.setBalance(result);
+      gm.setBalance(result);
+      chat.setBalance(result);
+    } catch (e) {
+      print('getBalance error: $e');
+    }
   }
 
   @override

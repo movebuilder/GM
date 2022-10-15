@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:gm/common/app_theme.dart';
 import 'package:gm/generated/l10n.dart';
+import 'package:gm/route/routes.dart';
 import 'package:gm/util/screen_util.dart';
 
 import 'gradient_text.dart';
@@ -142,6 +143,10 @@ class ChatListItem extends StatelessWidget {
                         ),
                         index % 2 == 0
                             ? LineButton(
+                                onTap: () {
+                                  Routes.navigateToInFormRight(
+                                      context, Routes.chat);
+                                },
                                 text: S.current.gm_now,
                                 width: 90,
                                 height: 30,

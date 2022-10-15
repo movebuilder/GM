@@ -147,6 +147,7 @@ class _GMTextFieldState extends State<GMTextField> with WidgetsBindingObserver {
                     fontWeight: FontWeight.w500,
                   ),
               controller: controller,
+              cursorColor: AppTheme.colorRed,
               keyboardType: widget.inputType,
               maxLines: widget.maxLines,
               autofocus: widget.autoFocus,

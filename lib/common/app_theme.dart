@@ -34,6 +34,7 @@ abstract class AppTheme {
 
   static ThemeData get themeData => ThemeData(
         primaryColor: primaryColor,
+        primaryColorLight: primaryColor.withOpacity(0.5),
         backgroundColor: backgroundColor,
         scaffoldBackgroundColor: backgroundColor,
         splashColor: Colors.transparent,

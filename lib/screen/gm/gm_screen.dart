@@ -39,14 +39,16 @@ class _GmScreenState extends State<GmScreen> {
   }
 
   void setBalance(balance) async {
-    setState(() {
-      _balance = balance;
-    });
+    if (mounted)
+      setState(() {
+        _balance = balance;
+      });
   }
 
   @override
   void initState() {
     super.initState();
+    _balance = StorageManager.getBalance();
     loadData();
   }
 
@@ -56,7 +58,7 @@ class _GmScreenState extends State<GmScreen> {
       color: Colors.white,
       child: Column(
         children: [
-          GmTop(title: 'GM', balance: _balance.toString()),
+          GmTop(title: 'GM', balance: _balance),
           Expanded(
             child: _buildContent(),
           ),
