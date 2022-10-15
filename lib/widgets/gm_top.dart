@@ -18,7 +18,7 @@ class GmTop extends StatelessWidget {
     this.balance = '',
     this.showBalance = true,
     this.lineWidth = 48,
-    this.height = 88,
+    this.height = 94,
   }) : super(key: key);
 
   @override

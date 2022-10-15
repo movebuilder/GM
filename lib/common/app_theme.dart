@@ -36,9 +36,8 @@ abstract class AppTheme {
         primaryColor: primaryColor,
         backgroundColor: backgroundColor,
         scaffoldBackgroundColor: backgroundColor,
-        splashColor: Colors.transparent,
+        splashColor: primaryColor,
         highlightColor: Colors.transparent,
-        cursorColor: colorFontGM,
         hintColor: colorFontGM,
         appBarTheme: const AppBarTheme(
           color: backgroundColor,

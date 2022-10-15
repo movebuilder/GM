@@ -18,7 +18,7 @@ class _ChatScreenState extends State<ChatScreen> {
             title: 'Chat',
             balance: _balance,
             lineWidth: 60,
-          )
+          ),
         ],
       ),
     );

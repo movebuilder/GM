@@ -40,6 +40,7 @@ dependencies:
   flutter_secure_storage: ^6.0.0
   shared_preferences: 2.0.15
   oktoast: 3.1.5
+  drag_like: ^3.0.0
   aptos:
     git:
       url: https://github.com/movebuilder/aptos.git
