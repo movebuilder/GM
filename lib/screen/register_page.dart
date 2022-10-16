@@ -37,7 +37,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             ),
             _subTile('Create a new Aptos wallet'),
-            _itemRegister('atpos.svg', 'Create Aptos Wallet'),
+            _itemRegister('aptos.svg', 'Create Aptos Wallet'),
             _subTile('Import an existing Wallet'),
             _itemRegister('mnemonic.svg', 'Import Wallet'),
           ],

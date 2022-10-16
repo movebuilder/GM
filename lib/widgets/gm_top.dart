@@ -71,7 +71,7 @@ class GmTop extends StatelessWidget {
                   child: Row(
                     children: [
                       imageUtils(
-                        'atpos.svg',
+                        'aptos.svg',
                         width: 18.w,
                         height: 18.w,
                       ),

@@ -42,7 +42,7 @@ class _ImportWalletState extends State<CreateWalletPage> {
           _title(),
           SizedBox(height: 135.w),
           imageUtils(
-            'atpos.svg',
+            'aptos.svg',
             width: 70.w,
             height: 70.w,
           ),

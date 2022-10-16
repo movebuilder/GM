@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:gm/common/app_theme.dart';
 import 'package:gm/util/screen_util.dart';
+import 'package:gm/widgets/chat_item.dart';
 import 'package:gm/widgets/chat_textfield.dart';
 import 'package:gm/widgets/expanded_viewport.dart';
 import 'package:gm/widgets/gm_appbar.dart';
@@ -16,7 +17,7 @@ class _ChatScreenState extends State<ChatScreen> {
   TextEditingController _textEditingController = TextEditingController();
   late FocusNode _textFieldFocusNode;
 
-  var _messages = ['1', '2'];
+  var _messages = ['1', '2', '3', '4', '5', '6', '7', '4', '5', '6', '7'];
 
   @override
   void initState() {
@@ -27,7 +28,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.backgroundColor,
+      backgroundColor: AppTheme.colorWhite,
       body: KeyboardDismissOnTap(child:
           KeyboardVisibilityBuilder(builder: (context, isKeyboardVisible) {
         return Stack(
@@ -39,7 +40,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
             Positioned(
-              top: 94.w,
+              top: 94.w - ScreenUtil.statusBarHeight,
               left: 0,
               right: 0,
               bottom: 0,
@@ -67,34 +68,31 @@ class _ChatScreenState extends State<ChatScreen> {
 
   _buildMessages() {
     return Expanded(
-      child: GestureDetector(
-        onTap: () {},
-        child: Scrollable(
-          controller: _scrollController,
-          axisDirection: AxisDirection.up,
-          viewportBuilder: (context, offset) {
-            return ExpandedViewport(
-              offset: offset,
-              axisDirection: AxisDirection.up,
-              slivers: <Widget>[
-                SliverExpanded(),
-                SliverPadding(
-                  padding: EdgeInsets.only(bottom: 15.w),
-                  sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (c, i) {
-                        return Container(
-                          height: 30.w,
-                        );
-                      },
-                      childCount: _messages.length,
-                    ),
+      child: Scrollable(
+        controller: _scrollController,
+        axisDirection: AxisDirection.up,
+        viewportBuilder: (context, offset) {
+          return ExpandedViewport(
+            offset: offset,
+            axisDirection: AxisDirection.up,
+            slivers: <Widget>[
+              SliverPadding(
+                padding: EdgeInsets.only(top: 15.w),
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (c, i) {
+                      return ChatItem(
+                        isMine: i % 2 == 0,
+                        message: "If it's not what you want, don't ask for it",
+                      );
+                    },
+                    childCount: _messages.length,
                   ),
-                )
-              ],
-            );
-          },
-        ),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

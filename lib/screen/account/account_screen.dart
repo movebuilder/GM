@@ -185,7 +185,7 @@ class _AccountScreenState extends State<AccountScreen> {
       ),
       child: Row(
         children: [
-          imageUtils('atpos.svg', width: 34.w),
+          imageUtils('aptos.svg', width: 34.w),
           SizedBox(width: 12.w),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -54,16 +54,21 @@ class _ChatTextFieldState extends State<ChatTextField> {
         ? 10.w
         : 10.w + (paddingBottom < 20.w ? 20.w : 0);
     return Container(
-      color: AppTheme.colorWhite,
       width: 375.w,
+      decoration: BoxDecoration(
+        color: AppTheme.colorWhite,
+        border: new Border.all(
+          color: AppTheme.colorHint.withOpacity(0.1),
+          width: 1.w,
+        ),
+      ),
       padding: EdgeInsets.fromLTRB(15.w, 10.w, 0, bottom),
       child: Row(
         children: [
           _buildSendMessage(),
-          SizedBox(width: 14.w),
-          if (_showTransferIcon) _buildTransferBtn(),
-          if (_showTransferIcon) SizedBox(width: 14.w),
-          _buildMessageBtn(),
+          Expanded(
+            child: _showTransferIcon ? _buildTransferBtn() : _buildMessageBtn(),
+          ),
         ],
       ),
     );
@@ -71,7 +76,7 @@ class _ChatTextFieldState extends State<ChatTextField> {
 
   _buildSendMessage() {
     return Container(
-      width: _showTransferIcon ? 248.w : 302.w,
+      width: 300.w,
       constraints: BoxConstraints(
         minHeight: 40.w,
       ),
@@ -89,7 +94,7 @@ class _ChatTextFieldState extends State<ChatTextField> {
             Padding(
               padding: EdgeInsets.only(right: 10.w),
               child: imageUtils(
-                'atpos.svg',
+                'aptos.svg',
                 width: 20.w,
               ),
             ),
@@ -135,44 +140,50 @@ class _ChatTextFieldState extends State<ChatTextField> {
   }
 
   _buildMessageBtn() {
-    return InkWell(
-      child: imageUtils(
-        _showSendMessageIcon ? "send.png" : "transfer.svg",
-        width: 30.w,
-        height: 30.w,
+    return Container(
+      alignment: Alignment.center,
+      child: Padding(
+        padding: EdgeInsets.all(5.w),
+        child: InkWell(
+          child: imageUtils(
+            _showSendMessageIcon ? "send.svg" : "transfer.svg",
+            width: 30.w,
+            height: 30.w,
+          ),
+          onTap: () {
+            if (_showSendMessageIcon) {
+            } else {
+              setState(() {
+                _showTransferIcon = !_showTransferIcon;
+              });
+            }
+          },
+        ),
       ),
-      onTap: () {
-        if (_showSendMessageIcon) {
-        } else {
-          setState(() {
-            _showTransferIcon = !_showTransferIcon;
-          });
-        }
-      },
     );
   }
 
   _buildTransferBtn() {
-    return InkWell(
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 10.w),
-        child: Text(
-          'Send',
-          style: TextStyle(
-            color: AppTheme.colorFontGM,
-            fontSize: ScreenUtil.fontSize16,
-            fontWeight: FontWeight.w400,
+    return Container(
+      alignment: Alignment.center,
+      child: InkWell(
+        child: Padding(
+          padding: EdgeInsets.all(5.w),
+          child: Text(
+            'Send',
+            style: TextStyle(
+              color: AppTheme.colorFontGM,
+              fontSize: ScreenUtil.fontSize16,
+              fontWeight: FontWeight.w400,
+            ),
           ),
         ),
-      ),
-      onTap: () {
-        if (_showSendMessageIcon) {
-        } else {
+        onTap: () {
           setState(() {
             _showTransferIcon = !_showTransferIcon;
           });
-        }
-      },
+        },
+      ),
     );
   }
 }

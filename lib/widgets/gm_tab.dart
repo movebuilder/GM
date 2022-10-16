@@ -43,7 +43,7 @@ class GmTab extends StatelessWidget {
                   activeIcon: Padding(
                     padding: EdgeInsets.only(top: 9.w),
                     child: imageUtils(
-                      tab == AppTab.gm ? "gm2.png" : "chat2.png",
+                      tab == AppTab.gm ? "gm2.svg" : "chat2.svg",
                       width: 31.w,
                     ),
                   ),

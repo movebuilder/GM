@@ -40,6 +40,7 @@ abstract class AppTheme {
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
         hintColor: colorFontGM,
+        accentColor: primaryColor.withOpacity(0.5),
         appBarTheme: const AppBarTheme(
           color: backgroundColor,
           elevation: 0,

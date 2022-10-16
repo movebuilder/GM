@@ -14,7 +14,7 @@ class ChatListScreen extends StatefulWidget {
 }
 
 class _ChatListScreenState extends State<ChatListScreen> {
-  var list = ['1', '2', '3', '4', '5', '6', '7'];
+  var list = ['1', '2', '3', '4', '5', '6', '7', '3', '4', '5', '6', '7'];
 
   Decimal _balance = Decimal.zero;
 
@@ -33,24 +33,30 @@ class _ChatListScreenState extends State<ChatListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          GmTop(
-            title: 'Chat',
-            balance: _balance,
-            lineWidth: 60,
-          ),
-          ListView.builder(
-            shrinkWrap: true,
-            padding: EdgeInsets.only(top: 0),
-            controller: ScrollController(),
-            itemCount: list.length,
-            itemBuilder: (context, index) {
-              return ChatListItem(index, index == 0, index == list.length - 1);
-            },
-          )
-        ],
+    return Scaffold(
+      body: Container(
+        child: Column(
+          children: [
+            GmTop(
+              title: 'Chat',
+              balance: _balance,
+              lineWidth: 60,
+            ),
+            Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: BouncingScrollPhysics(),
+                padding: EdgeInsets.only(top: 0),
+                controller: ScrollController(),
+                itemCount: list.length,
+                itemBuilder: (context, index) {
+                  return ChatListItem(
+                      index, index == 0, index == list.length - 1);
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
