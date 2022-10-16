@@ -18,11 +18,17 @@ class ChatMessage {
 
   final String content;
   final MessageInfo info;
+  // 1: pending, 2: done
+  final int status;
 
-  ChatMessage(this.content, this.info);
+  ChatMessage(this.content, this.info, this.status);
 
   factory ChatMessage.fromJson(Map<String, dynamic> data) {
-    return ChatMessage(data["content"], MessageInfo.fromJson(data["info"]));
+    return ChatMessage(
+      data["content"],
+      MessageInfo.fromJson(data["info"]),
+      int.parse(data["status"] ?? "0"),
+    );
   }
 
   Map<String, dynamic> toJson() {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gm/common/app_theme.dart';
 import 'package:gm/util/image_utils.dart';
 import 'package:gm/util/screen_util.dart';
@@ -8,6 +9,7 @@ class ChatTextField extends StatefulWidget {
   final TextEditingController textEditingController;
   final ScrollController scrollController;
   final Function() callBack;
+  final Function() sendMsg;
 
   const ChatTextField({
     Key? key,
@@ -15,6 +17,7 @@ class ChatTextField extends StatefulWidget {
     required this.textEditingController,
     required this.scrollController,
     required this.callBack,
+    required this.sendMsg,
   }) : super(key: key);
 
   @override
@@ -52,7 +55,7 @@ class _ChatTextFieldState extends State<ChatTextField> {
     var paddingBottom = MediaQuery.of(context).padding.bottom;
     double bottom = widget.isKeyboardVisible
         ? 10.w
-        : 10.w + (paddingBottom < 20.w ? 20.w : 0);
+        : 10.w + (paddingBottom < 20.w ? 20.w - paddingBottom : 0);
     return Container(
       width: 375.w,
       decoration: BoxDecoration(
@@ -107,6 +110,9 @@ class _ChatTextFieldState extends State<ChatTextField> {
               controller: widget.textEditingController,
               textInputAction: TextInputAction.send,
               cursorColor: AppTheme.colorRed,
+              inputFormatters: _showTransferIcon
+                  ? [FilteringTextInputFormatter.allow(RegExp("[0-9.]"))]
+                  : null,
               onSubmitted: (s) {},
               decoration: InputDecoration(
                 hintText: _showTransferIcon ? '0.00' : 'New Message',
@@ -152,6 +158,9 @@ class _ChatTextFieldState extends State<ChatTextField> {
           ),
           onTap: () {
             if (_showSendMessageIcon) {
+              if (widget.textEditingController.text.trim().length > 0) {
+                widget.sendMsg();
+              }
             } else {
               setState(() {
                 _showTransferIcon = !_showTransferIcon;

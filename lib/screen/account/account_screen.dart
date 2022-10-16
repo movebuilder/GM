@@ -1,6 +1,7 @@
 import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gm/aptos/transaction/tx_builder.dart';
 import 'package:gm/common/app_theme.dart';
 import 'package:gm/data/db/storage_manager.dart';
 import 'package:gm/generated/l10n.dart';
@@ -26,6 +27,18 @@ class _AccountScreenState extends State<AccountScreen> {
     super.initState();
     _balance = StorageManager.getBalance();
     _address = StorageManager.getAddress();
+    if (_balance == Decimal.zero) {
+      _getBalance();
+    }
+  }
+
+  void _getBalance() async {
+    try {
+      final result = await TxBuilder().getBalanceByAddress(_address);
+      StorageManager.setBalance(result);
+    } catch (e) {
+      print('getBalance error: $e');
+    }
   }
 
   @override
