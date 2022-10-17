@@ -37,11 +37,11 @@ class GmTop extends StatelessWidget {
             height: 9.w,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
                 colors: List.of([
-                  AppTheme.colorBtnGradientStart,
-                  AppTheme.colorBtnGradientEnd,
+                  Color(0xFFDBFF00),
+                  Color(0xFFFAFF00),
                 ]),
               ),
             ),

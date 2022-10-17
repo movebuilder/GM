@@ -7,12 +7,14 @@ import 'package:gm/util/screen_util.dart';
 
 class ChatItem extends StatelessWidget {
   final ChatMessage message;
+  final String nft;
 
   String get address => StorageManager.getAddress();
 
   ChatItem({
     Key? key,
     required this.message,
+    required this.nft,
   }) : super(key: key);
 
   @override
@@ -50,7 +52,12 @@ class ChatItem extends StatelessWidget {
             width: 42.w,
             height: 42.w,
           ),
-          // imageUtils(''),
+          if (!isMine)
+            imageUtils(
+              nft,
+              width: 42.w,
+              height: 42.w,
+            ),
           if (!isMine)
             Positioned(
               left: 28.w,

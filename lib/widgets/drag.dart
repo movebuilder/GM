@@ -4,12 +4,12 @@ import 'package:gm/util/screen_util.dart';
 
 class Drag extends StatefulWidget {
   final String src;
-  final bool showLine;
+  final bool firstInstall;
 
   const Drag({
     Key? key,
     required this.src,
-    required this.showLine,
+    required this.firstInstall,
   }) : super(key: key);
 
   @override
@@ -22,13 +22,13 @@ class _DragState extends State<Drag> {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      color: Colors.grey,
+      color: Colors.transparent,
       child: Stack(
         children: [
           Positioned.fill(
             child: imageNetworkUtils(widget.src),
           ),
-          if (widget.showLine)
+          if (widget.firstInstall)
             Positioned(
               top: 0,
               bottom: 0,
@@ -36,14 +36,14 @@ class _DragState extends State<Drag> {
               right: 171.w,
               child: imageUtils('line.svg'),
             ),
-          if (widget.showLine)
+          if (widget.firstInstall)
             Positioned(
               top: 0,
               bottom: 0,
               left: 52.w,
               child: _buildChoose('skip.svg', 'Skip'),
             ),
-          if (widget.showLine)
+          if (widget.firstInstall)
             Positioned(
               top: 0,
               bottom: 0,

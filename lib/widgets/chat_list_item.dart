@@ -2,23 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:gm/common/app_theme.dart';
 import 'package:gm/generated/l10n.dart';
+import 'package:gm/modal/chat_list.dart';
 import 'package:gm/route/routes.dart';
+import 'package:gm/util/common_util.dart';
 import 'package:gm/util/screen_util.dart';
 
 import 'gradient_text.dart';
 import 'line_button.dart';
 
 class ChatListItem extends StatelessWidget {
-  const ChatListItem(this.index, this.isFirst, this.isLast);
+  const ChatListItem(this.chat, this.isFirst, this.isLast);
 
-  final int index;
+  final ChatList chat;
   final bool isFirst;
   final bool isLast;
 
   @override
   Widget build(BuildContext context) {
     return Slidable(
-      key: ValueKey(index),
+      key: ValueKey(chat.content),
       endActionPane: ActionPane(
         motion: const ScrollMotion(),
         dismissible: DismissiblePane(onDismissed: () {}),
@@ -36,11 +38,14 @@ class ChatListItem extends StatelessWidget {
       child: Column(
         children: [
           GestureDetector(
+            onTap: () {
+              if (!chat.newMatch) _goToChat(context);
+            },
             child: Container(
               color: Colors.white,
               child: Column(
                 children: [
-                  if (index == 0) Container(height: 10.w),
+                  if (isFirst) Container(height: 10.w),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 15.w),
                     height: 80.w,
@@ -62,40 +67,40 @@ class ChatListItem extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              Positioned(
-                                  top: 17.w,
-                                  left: index % 2 == 0 ? 31.w : 28.w,
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    child: Container(
-                                      height: 18.w,
-                                      constraints: BoxConstraints(
-                                        minWidth: 18.w,
-                                      ),
-                                      alignment: Alignment.center,
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 5.w),
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(20.w),
-                                        gradient: LinearGradient(
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                          colors: List.of([
-                                            AppTheme.colorBtnGradientStart,
-                                            AppTheme.colorBtnGradientEnd,
-                                          ]),
-                                        ),
-                                      ),
-                                      child: Text(
-                                        index % 2 == 0 ? '1' : '99',
-                                        style: TextStyle(
-                                          color: AppTheme.colorFontGM,
-                                          fontSize: 12.sp,
-                                        ),
-                                      ),
-                                    ),
-                                  ))
+                              // Positioned(
+                              //     top: 17.w,
+                              //     left: index % 2 == 0 ? 31.w : 28.w,
+                              //     child: Container(
+                              //       alignment: Alignment.center,
+                              //       child: Container(
+                              //         height: 18.w,
+                              //         constraints: BoxConstraints(
+                              //           minWidth: 18.w,
+                              //         ),
+                              //         alignment: Alignment.center,
+                              //         padding:
+                              //             EdgeInsets.symmetric(horizontal: 5.w),
+                              //         decoration: BoxDecoration(
+                              //           borderRadius:
+                              //               BorderRadius.circular(20.w),
+                              //           gradient: LinearGradient(
+                              //             begin: Alignment.topLeft,
+                              //             end: Alignment.bottomRight,
+                              //             colors: List.of([
+                              //               AppTheme.colorBtnGradientStart,
+                              //               AppTheme.colorBtnGradientEnd,
+                              //             ]),
+                              //           ),
+                              //         ),
+                              //         child: Text(
+                              //           index % 2 == 0 ? '1' : '99',
+                              //           style: TextStyle(
+                              //             color: AppTheme.colorFontGM,
+                              //             fontSize: 12.sp,
+                              //           ),
+                              //         ),
+                              //       ),
+                              //     ))
                             ],
                           ),
                         ),
@@ -105,7 +110,7 @@ class ChatListItem extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                '0x2728...8916',
+                                interceptFormat(chat.address),
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 18.sp,
@@ -115,7 +120,7 @@ class ChatListItem extends StatelessWidget {
                               SizedBox(height: 5.w),
                               Container(
                                 width: 187.w,
-                                child: index % 2 == 0
+                                child: chat.newMatch
                                     ? GradientText(
                                         S.current.new_match,
                                         style: TextStyle(fontSize: 14.sp),
@@ -129,7 +134,7 @@ class ChatListItem extends StatelessWidget {
                                         ),
                                       )
                                     : Text(
-                                        'hhhh, why you are so happy',
+                                        chat.content,
                                         maxLines: 1,
                                         style: TextStyle(
                                           fontSize: 14.sp,
@@ -141,11 +146,10 @@ class ChatListItem extends StatelessWidget {
                             ],
                           ),
                         ),
-                        index % 2 == 0
+                        chat.newMatch
                             ? LineButton(
                                 onTap: () {
-                                  Routes.navigateToInFormRight(
-                                      context, Routes.chat);
+                                  _goToChat(context);
                                 },
                                 text: S.current.gm_now,
                                 width: 90,
@@ -157,13 +161,13 @@ class ChatListItem extends StatelessWidget {
                                 padding: EdgeInsets.only(top: 20.w),
                                 alignment: Alignment.topRight,
                                 child: Text(
-                                  '04/02/2022',
+                                  chat.showDate,
                                   style: TextStyle(
                                     fontSize: 14.sp,
                                     color: AppTheme.colorFontThree,
                                   ),
                                 ),
-                              )
+                              ),
                       ],
                     ),
                   ),
@@ -180,5 +184,10 @@ class ChatListItem extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  _goToChat(context) {
+    var path = '${Routes.chat}?chatAddress=${chat.address}&nft=${chat.nftImg}';
+    Routes.navigateToInFormRight(context, path);
   }
 }

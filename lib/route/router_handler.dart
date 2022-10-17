@@ -62,7 +62,8 @@ var secretPhraseHandler = Handler(
 var chatHandler = Handler(
   handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     final String chatAddress = params["chatAddress"]?.first ?? '';
-    return ChatScreen(chatAddress: chatAddress);
+    final String nft = params["nft"]?.first ?? '';
+    return ChatScreen(chatAddress: chatAddress, nft: nft);
   },
 );
 

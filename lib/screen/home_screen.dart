@@ -54,7 +54,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       bottomNavigationBar: GmTab(
           activeTab: activeTab,
-          unRead: 10,
           onTabSelected: (tab) {
             setState(() {
               activeTab = tab;

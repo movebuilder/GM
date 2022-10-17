@@ -2,22 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gm/common/app_theme.dart';
 import 'package:gm/util/image_utils.dart';
+import 'package:gm/util/precision_input_formatter.dart';
 import 'package:gm/util/screen_util.dart';
 
 class ChatTextField extends StatefulWidget {
   final bool isKeyboardVisible;
   final TextEditingController textEditingController;
-  final ScrollController scrollController;
-  final Function() callBack;
+  final FocusNode focusNode;
   final Function() sendMsg;
+  final Function(String) transfer;
 
   const ChatTextField({
     Key? key,
     required this.isKeyboardVisible,
     required this.textEditingController,
-    required this.scrollController,
-    required this.callBack,
+    required this.focusNode,
     required this.sendMsg,
+    required this.transfer,
   }) : super(key: key);
 
   @override
@@ -27,18 +28,19 @@ class ChatTextField extends StatefulWidget {
 class _ChatTextFieldState extends State<ChatTextField> {
   bool _showSendMessageIcon = false;
   bool _showTransferIcon = false;
+  late TextEditingController textEditingController;
 
   @override
   void initState() {
     super.initState();
-    widget.textEditingController.addListener(() {
+    textEditingController = widget.textEditingController;
+    textEditingController.addListener(() {
       if (!_showTransferIcon) {
-        if (!_showSendMessageIcon &&
-            widget.textEditingController.text.length > 0) {
+        if (!_showSendMessageIcon && textEditingController.text.length > 0) {
           _showSendMessageIcon = true;
           setState(() {});
         } else if (_showSendMessageIcon &&
-            widget.textEditingController.text.length < 1) {
+            textEditingController.text.length < 1) {
           _showSendMessageIcon = false;
           setState(() {});
         }
@@ -101,19 +103,19 @@ class _ChatTextFieldState extends State<ChatTextField> {
                 width: 20.w,
               ),
             ),
+          if (_showTransferIcon) SizedBox(width: 10.w),
           Expanded(
             child: TextField(
-              maxLines: null,
-              onTap: () {
-                widget.callBack();
-              },
-              controller: widget.textEditingController,
+              controller: textEditingController,
               textInputAction: TextInputAction.send,
               cursorColor: AppTheme.colorRed,
+              onChanged: (s) {},
               inputFormatters: _showTransferIcon
-                  ? [FilteringTextInputFormatter.allow(RegExp("[0-9.]"))]
+                  ? [PrecisionInputFormatter()]
                   : null,
-              onSubmitted: (s) {},
+              keyboardType: _showTransferIcon
+                  ? TextInputType.numberWithOptions(decimal: true)
+                  : TextInputType.text,
               decoration: InputDecoration(
                 hintText: _showTransferIcon ? '0.00' : 'New Message',
                 isDense: true,
@@ -158,7 +160,7 @@ class _ChatTextFieldState extends State<ChatTextField> {
           ),
           onTap: () {
             if (_showSendMessageIcon) {
-              if (widget.textEditingController.text.trim().length > 0) {
+              if (textEditingController.text.trim().length > 0) {
                 widget.sendMsg();
               }
             } else {
@@ -188,9 +190,17 @@ class _ChatTextFieldState extends State<ChatTextField> {
           ),
         ),
         onTap: () {
-          setState(() {
-            _showTransferIcon = !_showTransferIcon;
-          });
+          var text = textEditingController.text;
+          if (_showTransferIcon && text.length > 0) {
+            if (text != '0.') {
+              widget.transfer(text);
+            }
+          } else {
+            textEditingController.text = '';
+            setState(() {
+              _showTransferIcon = !_showTransferIcon;
+            });
+          }
         },
       ),
     );

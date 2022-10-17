@@ -64,18 +64,15 @@ class _AccountScreenState extends State<AccountScreen> {
 
   _buildInfo() {
     return Container(
-      margin: EdgeInsets.fromLTRB(24.w, 23.w, 0, 23.w),
+      margin: EdgeInsets.fromLTRB(24.w, 23.w, 0, 28.w),
       child: Row(
         children: [
-          Container(
-            width: 70.w,
+          imageUtils(
+            'avatar.svg',
+            width: 67.w,
             height: 70.w,
-            margin: EdgeInsets.only(right: 15.w),
-            decoration: BoxDecoration(
-              color: AppTheme.colorFontGM,
-              borderRadius: BorderRadius.all(Radius.circular(8.w)),
-            ),
           ),
+          SizedBox(width: 14.w),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -133,7 +130,7 @@ class _AccountScreenState extends State<AccountScreen> {
 
   _buildBalance() {
     return Container(
-      margin: EdgeInsets.fromLTRB(28.w, 25.w, 0, 50.w),
+      margin: EdgeInsets.fromLTRB(28.w, 0.w, 0, 45.w),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [

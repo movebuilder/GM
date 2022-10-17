@@ -36,13 +36,13 @@ class TxBuilder {
   }
 
   Future<dynamic> transferAptos(
-      AptosAccount sender,
-      String receiverAddress,
-      String amount,
-      String gasPrice,
-      String maxGasAmount,
-      String expirationTimestamp) async {
-
+    AptosAccount sender,
+    String receiverAddress,
+    String amount, {
+    String? gasPrice,
+    String? maxGasAmount,
+    String? expirationTimestamp,
+  }) async {
     const typeArgs = "0x1::aptos_coin::AptosCoin";
     const moduleId = "0x1::coin";
     const moduleFunc = "transfer";

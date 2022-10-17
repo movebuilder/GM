@@ -1,5 +1,7 @@
 import 'package:aptos/aptos.dart';
+import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:gm/aptos/transaction/chat_message.dart';
 import 'package:gm/aptos/transaction/tx_builder.dart';
@@ -8,6 +10,7 @@ import 'package:gm/common/app_theme.dart';
 import 'package:gm/data/db/storage_manager.dart';
 import 'package:gm/util/common_util.dart';
 import 'package:gm/util/screen_util.dart';
+import 'package:gm/util/toast_util.dart';
 import 'package:gm/widgets/chat_item.dart';
 import 'package:gm/widgets/chat_textfield.dart';
 import 'package:gm/widgets/expanded_viewport.dart';
@@ -15,9 +18,11 @@ import 'package:gm/widgets/gm_appbar.dart';
 
 class ChatScreen extends StatefulWidget {
   final String chatAddress;
+  final String nft;
 
   ChatScreen({
     required this.chatAddress,
+    required this.nft,
   });
 
   @override
@@ -36,13 +41,30 @@ class _ChatScreenState extends State<ChatScreen> {
 
   AptosAccount? account;
 
+  late FocusNode _focusNode;
+
+  late Map<String, bool> _chatEnable;
+  bool _myChatEnable = false;
+  bool _sendChatEnable = false;
+  bool _sendEnableChecked = false;
+
   @override
   void initState() {
     super.initState();
     _chatAddress = widget.chatAddress;
     _myAddress = StorageManager.getAddress();
-    // _getList();
-    //_enableChat();
+    _focusNode = FocusNode();
+    _chatEnable = StorageManager.getChatEnable();
+    _myChatEnable = _chatEnable[_myAddress] ?? false;
+    _sendChatEnable = _chatEnable[_chatAddress] ?? false;
+    _getList();
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    _scrollController.dispose();
+    super.dispose();
   }
 
   Future<void> _getAccount() async {
@@ -78,8 +100,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       ChatTextField(
                         isKeyboardVisible: isKeyboardVisible,
                         textEditingController: _textEditingController,
-                        scrollController: _scrollController,
-                        callBack: () {},
+                        focusNode: _focusNode,
                         sendMsg: () {
                           _scrollController.jumpTo(0.0);
                           var msg = _textEditingController.text;
@@ -93,8 +114,10 @@ class _ChatScreenState extends State<ChatScreen> {
                           ));
                           _textEditingController.text = '';
                           setState(() {});
-                          //_sendMessage(msg);
-                          //_enableChat();
+                          _sendMessage(msg);
+                        },
+                        transfer: (amount) {
+                          _transfer(amount);
                         },
                       ),
                     ],
@@ -126,6 +149,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     (c, i) {
                       return ChatItem(
                         message: _messages[(_messages.length - 1) - i],
+                        nft: widget.nft,
                       );
                     },
                     childCount: _messages.length,
@@ -140,27 +164,108 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   _getList() async {
-    print("_getList");
-
     var list = await txBuilder.getMessagesBySender(_myAddress, _chatAddress);
-    print("list.length");
     setState(() {
       _messages = list;
     });
   }
 
-  _enableChat() async {
-    print("_enableChat");
-    var m = await KeyManager.getMnemonic(await KeyManager.getPassword());
-    var result = await txBuilder.enableChat(AptosAccount.generateAccount(m));
-    print("result $result");
+  _sendMessage(message) async {
+    try {
+      EasyLoading.show();
+      if (account == null) {
+        await _getAccount();
+      }
+      if (!_myChatEnable) {
+        var enable = await txBuilder.checkChatEnabled(_myAddress);
+        if (enable) {
+          _myChatEnable = true;
+          _chatEnable[_myAddress] = true;
+          await StorageManager.setChatEnable(_chatEnable);
+        } else {
+          await txBuilder.enableChat(account!);
+          _myChatEnable = true;
+          _chatEnable[_myAddress] = true;
+          await StorageManager.setChatEnable(_chatEnable);
+        }
+      }
+      await _checkChatEnable(_myAddress);
+      var enable = await _checkChatEnable(_chatAddress);
+      if (enable) {
+        var m = await txBuilder.sendMessage(account!, _chatAddress, message);
+        print("result $m");
+      }
+    } catch (e) {
+      ToastUtil.show('Transfer Error');
+    } finally {
+      EasyLoading.dismiss();
+    }
   }
 
-  _sendMessage(message) async {
-    if (account == null) {
-      await _getAccount();
+  _transfer(String amount) async {
+    try {
+      EasyLoading.show();
+      if (account == null) {
+        await _getAccount();
+      }
+      final result = await txBuilder.getBalanceByAddress(_myAddress);
+      StorageManager.setBalance(result);
+      var num = Decimal.parse(amount);
+      if (num + Decimal.parse('0.000512') > result) {
+        ToastUtil.show('Insufficient balance');
+      } else {
+        var a = (num * Decimal.fromInt(10).pow(8)).toString();
+        var m = await txBuilder.transferAptos(account!, _chatAddress, a);
+        setState(() {
+          _textEditingController.text = '';
+        });
+        print("result $m");
+        ToastUtil.show('Transfer Success');
+      }
+    } catch (e) {
+      ToastUtil.show('Transfer Error');
+    } finally {
+      EasyLoading.dismiss();
     }
-    var m = await txBuilder.sendMessage(account!, _chatAddress, message);
-    print("result $m");
+  }
+
+  Future<bool> _checkChatEnable(address) async {
+    if (address == _myAddress) {
+      if (!_myChatEnable) {
+        var enable = await txBuilder.checkChatEnabled(_myAddress);
+        if (enable) {
+          _myChatEnable = true;
+          _chatEnable[_myAddress] = true;
+          await StorageManager.setChatEnable(_chatEnable);
+        } else {
+          await txBuilder.enableChat(account!);
+          _myChatEnable = true;
+          _chatEnable[_myAddress] = true;
+          await StorageManager.setChatEnable(_chatEnable);
+        }
+      }
+      return true;
+    } else {
+      if (!_sendChatEnable) {
+        if (!_sendEnableChecked) {
+          var enable = await txBuilder.checkChatEnabled(_chatAddress);
+          _sendEnableChecked = true;
+          if (enable) {
+            _sendChatEnable = true;
+            _chatEnable[_chatAddress] = true;
+            await StorageManager.setChatEnable(_chatEnable);
+          } else {
+            ToastUtil.show('${interceptFormat(_chatAddress, length: 5)} '
+                'does not have open session permissions');
+            return false;
+          }
+        } else {
+          ToastUtil.show('${interceptFormat(_chatAddress, length: 5)} '
+              'does not have open session permissions');
+          return false;
+        }
+      }
+    }
+    return true;
   }
 }
