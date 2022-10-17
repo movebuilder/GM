@@ -9,8 +9,8 @@
 
 
    <application
-        android:label="gm"
-        android:icon="@mipmap/ic_launcher">
+        android:label="GM"
+        android:icon="@mipmap/logo">
         <activity
             android:name=".MainActivity"
             android:exported="true"

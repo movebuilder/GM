@@ -47,18 +47,33 @@ class _HomeScreenState extends State<HomeScreen> {
         onFocusGained: () {
           getBalance();
         },
-        child: IndexedStack(
-          children: <Widget>[gm, chat],
-          index: AppTab.values.indexOf(activeTab),
+        child: Stack(
+          children: [
+            Positioned(
+              left: 0,
+              right: 0,
+              top: 0,
+              bottom: 70.w,
+              child: IndexedStack(
+                children: <Widget>[gm, chat],
+                index: AppTab.values.indexOf(activeTab),
+              ),
+            ),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0.w,
+              child: GmTab(
+                  activeTab: activeTab,
+                  onTabSelected: (tab) {
+                    setState(() {
+                      activeTab = tab;
+                    });
+                  }),
+            )
+          ],
         ),
       ),
-      bottomNavigationBar: GmTab(
-          activeTab: activeTab,
-          onTabSelected: (tab) {
-            setState(() {
-              activeTab = tab;
-            });
-          }),
     );
   }
 }

@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gm/common/app_theme.dart';
 import 'package:gm/util/image_utils.dart';
 import 'package:gm/util/screen_util.dart';
 
@@ -18,73 +16,45 @@ class GmTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          color: Colors.white,
-          child: Container(
-            width: 155.w,
-            margin: EdgeInsets.symmetric(horizontal: 110.w),
-            child: BottomNavigationBar(
-              elevation: 0,
-              backgroundColor: Colors.white,
-              type: BottomNavigationBarType.fixed,
-              currentIndex: AppTab.values.indexOf(activeTab),
-              onTap: (index) => onTabSelected(AppTab.values[index]),
-              items: AppTab.values.map((tab) {
-                return BottomNavigationBarItem(
-                  icon: Padding(
-                    padding: EdgeInsets.only(top: 9.w),
-                    child: imageUtils(
-                      tab == AppTab.gm ? "gm1.svg" : "chat1.svg",
-                      width: 31.w,
-                    ),
-                  ),
-                  activeIcon: Padding(
-                    padding: EdgeInsets.only(top: 9.w),
-                    child: imageUtils(
-                      tab == AppTab.gm ? "gm2.svg" : "chat2.svg",
-                      width: 31.w,
-                    ),
-                  ),
-                  label: '',
-                );
-              }).toList(),
-            ),
-          ),
+    return Container(
+      color: Colors.white,
+      height: 70.w,
+      padding: EdgeInsets.only(top: 4.w),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildTab(1),
+          SizedBox(width: 20.w),
+          _buildTab(2),
+        ],
+      ),
+    );
+  }
+
+  _buildTab(type) {
+    return InkWell(
+      onTap: () {
+        if (type == 1) {
+          onTabSelected(AppTab.gm);
+        } else {
+          onTabSelected(AppTab.chat);
+        }
+      },
+      child: Padding(
+        padding: EdgeInsets.all(10.w),
+        child: imageUtils(
+          type == 1
+              ? activeTab == AppTab.gm
+                  ? "gm2.svg"
+                  : "gm1.svg"
+              : activeTab == AppTab.chat
+                  ? "chat2.svg"
+                  : "chat1.svg",
+          width: 31.w,
+          height: 31.w,
         ),
-        if (unRead != null && unRead! > 0)
-          Positioned(
-            top: 6.5.w,
-            left: 242.w,
-            child: Container(
-              height: 18.w,
-              constraints: BoxConstraints(
-                minWidth: 24.w,
-              ),
-              alignment: Alignment.center,
-              padding: EdgeInsets.symmetric(horizontal: 5.w),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20.w),
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: List.of([
-                    AppTheme.colorBtnGradientStart,
-                    AppTheme.colorBtnGradientEnd,
-                  ]),
-                ),
-              ),
-              child: Text(
-                unRead.toString(),
-                style: TextStyle(
-                  color: AppTheme.colorFontGM,
-                  fontSize: 12.sp,
-                ),
-              ),
-            ),
-          )
-      ],
+      ),
     );
   }
 }

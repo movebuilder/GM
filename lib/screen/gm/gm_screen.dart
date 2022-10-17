@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swiper_plus/flutter_swiper_plus.dart';
 import 'package:gm/common/app_theme.dart';
 import 'package:gm/data/db/storage_manager.dart';
+import 'package:gm/util/image_utils.dart';
 import 'package:gm/util/screen_util.dart';
 import 'package:gm/widgets/drag.dart';
 import 'package:gm/widgets/gm_top.dart';
@@ -32,6 +33,13 @@ class _GmScreenState extends State<GmScreen> {
     "We All Gonna Make It",
   ];
 
+  double rightStart = 0;
+  double leftStart = 0;
+
+  double y = 0;
+  double scare1 = 1;
+  double scare2 = 1;
+
   List imageList = [];
 
   var firstInstall = false;
@@ -39,6 +47,7 @@ class _GmScreenState extends State<GmScreen> {
   void loadData() async {
     await Future.delayed(Duration(milliseconds: 100));
     imageList.addAll(data);
+
     if (StorageManager.getFirstInstall()) {
       firstInstall = true;
       StorageManager.setFirstInstall(false);
@@ -57,6 +66,9 @@ class _GmScreenState extends State<GmScreen> {
   void initState() {
     super.initState();
     _balance = StorageManager.getBalance();
+    rightStart = 375.w;
+    leftStart = -66.w;
+    y = 304.5.w;
     loadData();
   }
 
@@ -84,15 +96,30 @@ class _GmScreenState extends State<GmScreen> {
             dragController: _dragController,
             duration: Duration(milliseconds: 520),
             child: imageList.length <= 0
-                ? Text('Loading...')
+                ? _buildBackground()
                 : _buildImage(imageList[0], firstInstall),
             secondChild: imageList.length <= 1
-                ? Container()
+                ? _buildBackground()
                 : _buildImage(imageList[1], false),
-            screenWidth: 375,
+            screenWidth: 375.w,
             outValue: 0.8,
             dragSpeed: 1000,
-            onChangeDragDistance: (distance) {},
+            onChangeDragDistance: (distance) {
+              var d = distance['distanceProgress'];
+              if (distance['distance'] < 0) {
+                scare2 = 1;
+                scare1 = 1 + 1.7 * d;
+                leftStart = -33.w;
+                rightStart = 375.w - 175.w * d;
+              } else {
+                scare1 = 1;
+                scare2 = 1 + 1.7 * d;
+                rightStart = 375.w;
+                leftStart = -33.w + 175.w * d;
+              }
+              firstInstall = false;
+              setState(() {});
+            },
             onOutComplete: (type) {
               print(type);
             },
@@ -102,11 +129,29 @@ class _GmScreenState extends State<GmScreen> {
                 loadData();
               }
             },
-            onPointerUp: () {},
+            onPointerUp: () {
+              setState(() {
+                rightStart = 375.w;
+                leftStart = -33.w;
+                scare1 = 1;
+                scare2 = 1;
+              });
+            },
           ),
         ),
-        Container(
-          alignment: Alignment.center,
+        Transform.translate(
+          offset: Offset(rightStart, y),
+          child: Transform.scale(
+            scale: scare1,
+            child: imageUtils('yes.svg', width: 33.w, height: 33.w),
+          ),
+        ),
+        Transform.translate(
+          offset: Offset(leftStart, y),
+          child: Transform.scale(
+            scale: scare2,
+            child: imageUtils('skip.svg', width: 33.w, height: 33.w),
+          ),
         ),
       ],
     );
@@ -115,38 +160,7 @@ class _GmScreenState extends State<GmScreen> {
   _buildImage(src, firstInstall) {
     return Stack(
       children: [
-        Container(
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16.w),
-            color: AppTheme.colorWhite,
-            border: Border.all(
-              width: 2.w,
-              color: AppTheme.colorGreyTwo.withOpacity(0.2),
-            ),
-          ),
-          child: Container(
-            height: 30.w,
-            child: Swiper(
-              itemBuilder: (context, index) {
-                return Text(
-                  tips[index],
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: AppTheme.colorGreyTwo,
-                    fontSize: 26.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                );
-              },
-              autoplay: true,
-              duration: 500,
-              itemCount: tips.length,
-              scrollDirection: Axis.vertical,
-              pagination: null,
-            ),
-          ),
-        ),
+        _buildBackground(),
         ClipRRect(
           borderRadius: BorderRadius.circular(16.w),
           child: Drag(
@@ -155,6 +169,41 @@ class _GmScreenState extends State<GmScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  _buildBackground() {
+    return Container(
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16.w),
+        color: AppTheme.colorWhite,
+        border: Border.all(
+          width: 2.w,
+          color: AppTheme.colorGreyTwo.withOpacity(0.2),
+        ),
+      ),
+      child: Container(
+        height: 30.w,
+        child: Swiper(
+          itemBuilder: (context, index) {
+            return Text(
+              tips[index],
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: AppTheme.colorGreyTwo,
+                fontSize: 26.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            );
+          },
+          autoplay: true,
+          duration: 500,
+          itemCount: tips.length,
+          scrollDirection: Axis.vertical,
+          pagination: null,
+        ),
+      ),
     );
   }
 }
