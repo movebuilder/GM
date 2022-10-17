@@ -107,15 +107,15 @@ class _GmScreenState extends State<GmScreen> {
             onChangeDragDistance: (distance) {
               var d = distance['distanceProgress'];
               if (distance['distance'] < 0) {
-                scare2 = 1;
-                scare1 = 1 + 1.7 * d;
-                leftStart = -33.w;
-                rightStart = 375.w - 175.w * d;
-              } else {
                 scare1 = 1;
                 scare2 = 1 + 1.7 * d;
                 rightStart = 375.w;
                 leftStart = -33.w + 175.w * d;
+              } else {
+                scare2 = 1;
+                scare1 = 1 + 1.7 * d;
+                leftStart = -33.w;
+                rightStart = 375.w - 175.w * d;
               }
               firstInstall = false;
               setState(() {});
