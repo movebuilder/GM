@@ -106,6 +106,19 @@ class TxBuilder {
     return messages.toList();
   }
 
+  Future<bool> checkChatEnabled(String address) async {
+    try {
+      final data = await client.getAccountResouce(address, resouceType);
+      return data["type"] == resouceType;
+    } catch(e) {
+      dynamic err = e;
+      if (err.response.statusCode == 404) {
+        return false;
+      }
+      rethrow;
+    }
+  }
+
   Future<dynamic> enableChat(
       AptosAccount sender,
       {String? gasPrice,
