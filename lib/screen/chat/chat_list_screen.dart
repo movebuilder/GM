@@ -95,7 +95,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
 
     List<ChatList> l = [];
     List<String> accounts = [];
-    var list = await txBuilder.getMessages(_myAddress);
+    var list = await txBuilder.getMessages(_myAddress, "otherAddress");
     list.forEach((element) {
       var addr = element.info.sender;
       if (addr != _myAddress) {

@@ -170,7 +170,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   _getList() async {
-    var list = await txBuilder.getMessagesBySender(_myAddress, _chatAddress);
+    var list = await txBuilder.getMessages(_myAddress, _chatAddress);
     setState(() {
       _messages = list;
     });

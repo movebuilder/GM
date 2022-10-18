@@ -73,9 +73,9 @@ class TxBuilder {
 
   /// CHAT MESSAGE ///
 
-  Future<List<ChatMessage>> getMessages(String address) async {
+  Future<List<ChatMessage>> getMessages(String myAddress, String otherAddress) async {
     final accountResource = await client.getAccountResouce(
-        address,
+        myAddress,
         resouceType
     );
 
@@ -84,7 +84,7 @@ class TxBuilder {
     final tableItem = new TableItem(
         "address",
         "vector<$moduleId::Message>",
-        "0x31182e37835da2913d0e8a2bf28f7c841faf9316a154a88601c1ab7c4d4e48f5"
+        otherAddress
     );
 
     try {
@@ -107,12 +107,12 @@ class TxBuilder {
     }
   }
 
-  Future<List<ChatMessage>> getMessagesBySender(String address, String sender) async {
-    final allMessage = await getMessages(address);
-    final messages = allMessage.where((m) => m.info.sender == sender);
-    if (messages.isEmpty) return [];
-    return messages.toList();
-  }
+  // Future<List<ChatMessage>> getMessagesBySender(String address, String sender) async {
+  //   final allMessage = await getMessages(address, sender);
+    // final messages = allMessage.where((m) => m.info.sender == sender);
+    // if (messages.isEmpty) return [];
+    // return messages.toList();
+  // }
 
   Future<bool> checkChatEnabled(String address) async {
     try {
