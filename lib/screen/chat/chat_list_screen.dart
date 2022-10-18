@@ -73,9 +73,15 @@ class _ChatListScreenState extends State<ChatListScreen> {
   }
 
   _getList() async {
+    final txBuilder = TxBuilder();
+    final chatEnabled = await txBuilder.checkChatEnabled(_myAddress);
+    if (!chatEnabled) {
+      return;
+    }
+
     List<ChatList> l = [];
     List<String> accounts = [];
-    var list = await TxBuilder().getMessages(_myAddress);
+    var list = await txBuilder.getMessages(_myAddress);
     list.forEach((element) {
       var addr = element.info.sender;
       if (addr != _myAddress) {
