@@ -45,7 +45,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
     _balance = StorageManager.getBalance();
     _myAddress = StorageManager.getAddress();
     _list = StorageManager.getChatShortList();
-    _getList();
+    // _getList();
   }
 
   @override

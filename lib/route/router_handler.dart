@@ -9,6 +9,7 @@ import 'package:gm/screen/create_wallet.dart';
 import 'package:gm/screen/home_screen.dart';
 import 'package:gm/screen/import_wallet.dart';
 import 'package:gm/screen/register_page.dart';
+import 'package:gm/screen/web_screen.dart';
 import 'package:gm/screen/welcome_screen.dart';
 import 'package:gm/util/fluro_convert_util.dart';
 
@@ -74,5 +75,19 @@ var chatHandler = Handler(
 var approveHandler = Handler(
   handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return ApproveScreen();
+  },
+);
+
+var webHandler = Handler(
+  handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    String title = params["title"]?.first ?? '';
+    if (title.isNotEmpty) {
+      title = FluroConvertUtils.fluroCnParamsDecode(title);
+    }
+    String url = params["url"]?.first ?? '';
+    if (url.isNotEmpty) {
+      url = FluroConvertUtils.fluroCnParamsDecode(url);
+    }
+    return WebScreen(url: url, title: title);
   },
 );

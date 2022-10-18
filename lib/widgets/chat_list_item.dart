@@ -202,7 +202,6 @@ class ChatListItem extends StatelessWidget {
   _goToChat(context) {
     var path =
         '${Routes.chat}?chatAddress=${chat.address}&nft=${FluroConvertUtils.fluroCnParamsEncode(chat.nftImg)}';
-    print(path);
     Routes.navigateToInFormRight(context, path);
   }
 }

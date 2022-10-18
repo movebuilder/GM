@@ -7,6 +7,7 @@ import 'package:gm/data/db/storage_manager.dart';
 import 'package:gm/generated/l10n.dart';
 import 'package:gm/route/routes.dart';
 import 'package:gm/util/common_util.dart';
+import 'package:gm/util/fluro_convert_util.dart';
 import 'package:gm/util/image_utils.dart';
 import 'package:gm/util/screen_util.dart';
 import 'package:gm/util/toast_util.dart';
@@ -167,6 +168,12 @@ class _AccountScreenState extends State<AccountScreen> {
             text: S.current.airdrop,
             width: 150,
             fontSize: 17,
+            onTap: () {
+              var path =
+                  '${Routes.web}?url=${FluroConvertUtils.fluroCnParamsEncode('https://aptoslabs.com/testnet-faucet')}'
+                  '&title=${FluroConvertUtils.fluroCnParamsEncode('Aptos Faucet')}';
+              Routes.navigateToInFormRight(context, path);
+            },
           ),
           LineButton(
             text: S.current.secret_phrase,
