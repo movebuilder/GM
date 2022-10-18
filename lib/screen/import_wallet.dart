@@ -1,3 +1,4 @@
+import 'package:aptos/aptos.dart';
 import 'package:aptos/aptos_account.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -186,13 +187,23 @@ class _ImportWalletState extends State<ImportWalletPage> {
   _import() async {
     try {
       EasyLoading.show();
-      var account = AptosAccount.generateAccount(_mnemonic);
-      await KeyManager.setMnemonic(_mnemonic, _password1);
-      final localMnemonic = await KeyManager.getMnemonic(_password1);
-      if (_mnemonic == localMnemonic) {
-        await KeyManager.setPassword(_password1);
+      if (AptosAccount.isValidMnemonics(_mnemonic)) {
+        var account = AptosAccount.generateAccount(_mnemonic);
         await KeyManager.setMnemonic(_mnemonic, _password1);
-        await StorageManager.setAddress(account.accountAddress.hex());
+        final localMnemonic = await KeyManager.getMnemonic(_password1);
+        if (_mnemonic == localMnemonic) {
+          await KeyManager.setPassword(_password1);
+          await StorageManager.setAddress(account.address);
+        }
+      } else {
+        var privateKey = _mnemonic;
+        var account = AptosAccount.fromPrivateKey(privateKey);
+        await KeyManager.setPrivateKey(privateKey, _password1);
+        final localPrivateKey = await KeyManager.getPrivateKey(_password1);
+        if (privateKey == localPrivateKey) {
+          await KeyManager.setPassword(_password1);
+          await StorageManager.setAddress(account.address);
+        }
       }
       EasyLoading.dismiss();
       route.navigateTo(context, Routes.root, replace: true);

@@ -32,7 +32,7 @@ class TxBuilder {
   }
 
   Future<Decimal> getBalanceByAccount(AptosAccount account) async {
-    return await getBalanceByAddress(account.address().hex());
+    return await getBalanceByAddress(account.address);
   }
 
   Future<dynamic> transferAptos(
@@ -199,7 +199,7 @@ class TxBuilder {
       String? maxGasAmount,
       String? expirationTimestamp}
   ) async {
-    final senderAddress = sender.address().hex();
+    final senderAddress = sender.address;
     final accountInfo = await client.getAccount(senderAddress);
     final ledgerInfo = await client.getLedgerInfo();
     final sequenceNumber = int.parse(accountInfo.sequenceNumber);
