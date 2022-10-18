@@ -25,11 +25,12 @@ class _GmScreenState extends State<GmScreen> {
   Decimal _balance = Decimal.zero;
 
   DragController _dragController = DragController();
+  ScrollController _scrollController = ScrollController();
 
   List<AccountNftList> data = [];
   var tips = [
     "Good Morning",
-    "Glad to message to you",
+    "Glad to message you",
     "Good to match with you",
     "We All Gonna Make It",
   ];
@@ -94,13 +95,14 @@ class _GmScreenState extends State<GmScreen> {
                   child: data.length <= 0
                       ? _buildBackground()
                       : Drag(
-                          src: data[0].nft![0].tokenUri ?? "",
+                          list: data[0].nft ?? [],
                           firstInstall: firstInstall,
+                          scrollController: _scrollController,
                         ),
                   secondChild: data.length <= 1
                       ? _buildBackground()
                       : Drag(
-                          src: data[1].nft![0].tokenUri ?? "",
+                          list: data[1].nft ?? [],
                           firstInstall: false,
                         ),
                   screenWidth: 375,
@@ -152,6 +154,9 @@ class _GmScreenState extends State<GmScreen> {
                       scare1 = 1;
                       scare2 = 1;
                     });
+                    _scrollController.animateTo(.0,
+                        duration: Duration(milliseconds: 200),
+                        curve: Curves.ease);
                   },
                 ),
         ),

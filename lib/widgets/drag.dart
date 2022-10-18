@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:gm/common/app_theme.dart';
+import 'package:gm/modal/account_nft_list.dart';
 import 'package:gm/util/image_utils.dart';
 import 'package:gm/util/screen_util.dart';
 
 class Drag extends StatefulWidget {
-  final String src;
+  final List<Nft> list;
   final bool firstInstall;
+  final ScrollController? scrollController;
 
   const Drag({
     Key? key,
-    required this.src,
+    required this.list,
     required this.firstInstall,
+    this.scrollController,
   }) : super(key: key);
 
   @override
@@ -34,7 +37,12 @@ class _DragState extends State<Drag> {
         child: Stack(
           children: [
             Positioned.fill(
-              child: imageNetworkUtils(widget.src),
+              child: SingleChildScrollView(
+                controller: widget.scrollController,
+                child: Column(
+                  children: _buildImageList(),
+                ),
+              ),
             ),
             if (widget.firstInstall)
               Positioned(
@@ -80,6 +88,58 @@ class _DragState extends State<Drag> {
               style: TextStyle(
                 fontSize: 16.sp,
                 color: Colors.white,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _buildImageList() {
+    List<Widget> list = [];
+    widget.list.forEach((element) {
+      if (list.length < 6) {
+        list.add(_itemImage(element.tokenUri ?? "", element.tokenName ?? ""));
+      }
+    });
+    return list;
+  }
+
+  _itemImage(url, name) {
+    return Container(
+      width: 345.w,
+      height: 345.w,
+      child: Stack(
+        children: [
+          (url.endsWith('.png') || url.endsWith('.jpg') || url.endsWith('.svg'))
+              ? imageNetworkUtils(
+                  url,
+                  width: 345.w,
+                  height: 345.w,
+                  fit: BoxFit.fill,
+                )
+              : Image.network(
+                  url,
+                  width: 345.w,
+                  height: 345.w,
+                  fit: BoxFit.fill,
+                ),
+          Positioned(
+            right: 14.w,
+            bottom: 14.w,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.w),
+                color: AppTheme.colorFontGM.withOpacity(0.2),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.w),
+              child: Text(
+                name,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: Colors.white,
+                ),
               ),
             ),
           )

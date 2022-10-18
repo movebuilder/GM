@@ -57,6 +57,7 @@ class StorageManager {
       if (stringList != null && stringList.length > 0) {
         history =
             stringList.map((e) => ChatList.fromJson(jsonDecode(e))).toList();
+        history.sort((a, b) => b.timestamp.compareTo(a.timestamp));
       }
     } catch (e) {
       _sharedPreferences.remove(_chat_short_list);
