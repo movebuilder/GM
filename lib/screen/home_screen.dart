@@ -45,6 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: FocusDetector(
         onFocusGained: () {
+          chat.updateLocalList();
           getBalance();
         },
         child: Stack(

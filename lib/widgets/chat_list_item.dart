@@ -73,19 +73,20 @@ class ChatListItem extends StatelessWidget {
                                         width: 42.w,
                                         height: 42.w,
                                       ),
-                                      (chat.nftImg.endsWith('.png') ||
-                                              chat.nftImg.endsWith('.jpg') ||
-                                              chat.nftImg.endsWith('.svg'))
-                                          ? imageNetworkUtils(
-                                              chat.nftImg,
-                                              width: 42.w,
-                                              height: 42.w,
-                                            )
-                                          : Image.network(
-                                              chat.nftImg,
-                                              width: 42.w,
-                                              height: 42.w,
-                                            )
+                                      if (chat.nftImg.isNotEmpty)
+                                        (chat.nftImg.endsWith('.png') ||
+                                                chat.nftImg.endsWith('.jpg') ||
+                                                chat.nftImg.endsWith('.svg'))
+                                            ? imageNetworkUtils(
+                                                chat.nftImg,
+                                                width: 42.w,
+                                                height: 42.w,
+                                              )
+                                            : Image.network(
+                                                chat.nftImg,
+                                                width: 42.w,
+                                                height: 42.w,
+                                              )
                                     ],
                                   ),
                                 ),

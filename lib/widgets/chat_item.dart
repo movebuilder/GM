@@ -123,7 +123,11 @@ class ChatItem extends StatelessWidget {
             height: 24.w,
             alignment: Alignment.center,
             child: Text(
-              message.status == 1 ? "Sending..." : "delivered",
+              message.status == 1
+                  ? "Sending..."
+                  : message.status == 2
+                      ? "delivered"
+                      : "failed",
               style: TextStyle(
                 color: AppTheme.colorGreyTwo,
                 fontSize: 14.sp,

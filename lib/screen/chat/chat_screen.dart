@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:aptos/aptos.dart';
 import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +10,7 @@ import 'package:gm/aptos/transaction/tx_builder.dart';
 import 'package:gm/aptos/wallet/key_manager.dart';
 import 'package:gm/common/app_theme.dart';
 import 'package:gm/data/db/storage_manager.dart';
+import 'package:gm/util/chat_util.dart';
 import 'package:gm/util/common_util.dart';
 import 'package:gm/util/screen_util.dart';
 import 'package:gm/util/toast_util.dart';
@@ -47,6 +50,9 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _myChatEnable = false;
   bool _sendChatEnable = false;
   bool _sendEnableChecked = false;
+
+  Timer? _timer;
+  List<String> _hashes = [];
 
   @override
   void initState() {
@@ -110,7 +116,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               _myAddress,
                               DateTime.now().microsecondsSinceEpoch.toString(),
                             ),
-                            1,
+                            status: 1,
                           ));
                           _textEditingController.text = '';
                           setState(() {});
@@ -193,9 +199,20 @@ class _ChatScreenState extends State<ChatScreen> {
       var enable = await _checkChatEnable(_chatAddress);
       if (enable) {
         var m = await txBuilder.sendMessage(account!, _chatAddress, message);
-        print("result $m");
+        if (m['hash'].toString().length > 0) {
+          _hashes.add(m['hash']);
+          _messages[_messages.length - 1].hash = m['hash'];
+        }
+        _hashStatus();
+      } else {
+        setState(() {
+          _messages[_messages.length - 1].status = 2;
+        });
       }
     } catch (e) {
+      setState(() {
+        _messages[_messages.length - 1].status = 2;
+      });
       ToastUtil.show('Transfer Error');
     } finally {
       EasyLoading.dismiss();
@@ -267,5 +284,39 @@ class _ChatScreenState extends State<ChatScreen> {
       }
     }
     return true;
+  }
+
+  _hashStatus() {
+    if (_timer != null) {
+      _timer?.cancel();
+      _timer = null;
+    }
+    _timer = Timer.periodic(Duration(seconds: 1), (val) {
+      if (_hashes.isEmpty) {
+        _timer?.cancel();
+        _timer = null;
+      } else {
+        _hashes.forEach((element) {
+          _getHashStatus(element);
+        });
+      }
+    });
+  }
+
+  _getHashStatus(hash) async {
+    var pending = await txBuilder.isPending(hash);
+    if (!pending) {
+      _hashes.remove(hash);
+      for (var i = _messages.length - 1; i > -1; i--) {
+        if (_messages[i].hash == hash) {
+          _messages[i].status = 2;
+          await ChatUtil.updateChatList(_messages[i], _chatAddress);
+          break;
+        }
+      }
+      setState(() {});
+    } else {
+      _hashStatus();
+    }
   }
 }

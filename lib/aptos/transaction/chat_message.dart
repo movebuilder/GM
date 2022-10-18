@@ -1,4 +1,3 @@
-
 class MessageInfo {
   final String sender;
   final String timestamp;
@@ -10,32 +9,31 @@ class MessageInfo {
   }
 
   Map<String, String> toJson() {
-    return { "sender": sender, "timestamp": timestamp };
+    return {"sender": sender, "timestamp": timestamp};
   }
 }
 
 class ChatMessage {
-
   final String content;
+  String hash = '';
   final MessageInfo info;
-  // 1: pending, 2: done
-  final int status;
 
-  ChatMessage(this.content, this.info, this.status);
+  // 1: pending, 2: done
+  int status;
+
+  ChatMessage(this.content, this.info, {this.status = 0, this.hash = ''});
 
   factory ChatMessage.fromJson(Map<String, dynamic> data) {
-    return ChatMessage(
-      data["content"],
-      MessageInfo.fromJson(data["info"]),
-      int.parse(data["status"] ?? "0"),
-    );
+    return ChatMessage(data["content"], MessageInfo.fromJson(data["info"]),
+        status: int.parse(data["status"] ?? "0"), hash: data["hash"] ?? '');
   }
 
   Map<String, dynamic> toJson() {
     return {
       "content": content,
+      "hash": hash,
+      "status": status,
       "info": info.toJson()
     };
   }
-
 }
