@@ -15,8 +15,9 @@ import 'package:gm/aptos/transaction/chat_message.dart';
 
 class TxBuilder {
 
-  static const String moduleId = "0xfaf52ae1b48f945014ab1ba2798f85498995848cedfb0fbd167fada7ccb2d66e::chat";
-  static const String resouceType = moduleId + "::MessageStore";
+  static const String moduleId = "0xfaf52ae1b48f945014ab1ba2798f85498995848cedfb0fbd167fada7ccb2d66e";
+  static const String messageStoreResouceType = moduleId + "::MessageStore";
+  static const String allContactsResourceType = moduleId + "::chat::All_Contact";
 
   late AptosClient client;
   late CoinClient coinClient;
@@ -73,10 +74,24 @@ class TxBuilder {
 
   /// CHAT MESSAGE ///
 
+  Future<List<String>> getChatList(String address) async {
+    try {
+      final accountResource = await client.getAccountResouce(address, allContactsResourceType);
+      final contacts = accountResource["data"]["contacts"];
+      return contacts.cast<String>();
+    } catch (e) {
+      dynamic err = e;
+      if(err.response.statusCode == 404) {
+        return [];
+      }
+      rethrow;
+    }
+  }
+
   Future<List<ChatMessage>> getMessages(String myAddress, String otherAddress) async {
     final accountResource = await client.getAccountResouce(
         myAddress,
-        resouceType
+        messageStoreResouceType
     );
 
     final handle = accountResource["data"]["messages"]["handle"];
@@ -107,17 +122,10 @@ class TxBuilder {
     }
   }
 
-  // Future<List<ChatMessage>> getMessagesBySender(String address, String sender) async {
-  //   final allMessage = await getMessages(address, sender);
-    // final messages = allMessage.where((m) => m.info.sender == sender);
-    // if (messages.isEmpty) return [];
-    // return messages.toList();
-  // }
-
   Future<bool> checkChatEnabled(String address) async {
     try {
-      final data = await client.getAccountResouce(address, resouceType);
-      return data["type"] == resouceType;
+      final data = await client.getAccountResouce(address, messageStoreResouceType);
+      return data["type"] == messageStoreResouceType;
     } catch(e) {
       dynamic err = e;
       if (err.response.statusCode == 404) {
