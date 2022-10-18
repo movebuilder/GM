@@ -74,9 +74,14 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future<void> _getAccount() async {
-    var mnemonics =
-        await KeyManager.getMnemonic(await KeyManager.getPassword());
-    account = AptosAccount.generateAccount(mnemonics);
+    final password = await KeyManager.getPassword();
+    if (await KeyManager.isExistMnemonic()) {
+      final mnemonics = await KeyManager.getMnemonic(password);
+      account = AptosAccount.generateAccount(mnemonics);
+    } else {
+      final privateKey = await KeyManager.getPrivateKey(password);
+      account = AptosAccount.fromPrivateKey(privateKey);
+    }
   }
 
   @override

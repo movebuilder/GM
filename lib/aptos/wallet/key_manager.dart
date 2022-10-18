@@ -15,6 +15,11 @@ class KeyManager {
     String cipher = AesCbc.encrypt(password, mnemonic);
     return await Keychain.shared.setMnemonic(cipher);
   }
+  
+  static Future<bool> isExistMnemonic() async {
+    String cipher = await Keychain.shared.getMnemonic();
+    return cipher.isNotEmpty;
+  }
 
   static Future<String> getMnemonic(String password) async {
     String cipher = await Keychain.shared.getMnemonic();
