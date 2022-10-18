@@ -54,6 +54,10 @@ class _ChatScreenState extends State<ChatScreen> {
   Timer? _timer;
   List<String> _hashes = [];
 
+  List<ChatMessage> _waitMessages = [];
+  var _isSending = false;
+  var _isTransfer = false;
+
   @override
   void initState() {
     super.initState();
@@ -114,20 +118,35 @@ class _ChatScreenState extends State<ChatScreen> {
                       sendMsg: () {
                         _scrollController.jumpTo(0.0);
                         var msg = _textEditingController.text;
-                        _messages.add(ChatMessage(
+                        var chat = ChatMessage(
                           msg,
                           MessageInfo(
                             _myAddress,
                             DateTime.now().microsecondsSinceEpoch.toString(),
                           ),
                           status: 1,
-                        ));
+                        );
+                        _messages.add(chat);
+                        _waitMessages.add(chat);
                         _textEditingController.text = '';
                         setState(() {});
-                        _sendMessage(msg);
+                        _sendMessage();
                       },
                       transfer: (amount) {
-                        _transfer(amount);
+                        var chat = ChatMessage(
+                          '',
+                          MessageInfo(
+                            _myAddress,
+                            DateTime.now().microsecondsSinceEpoch.toString(),
+                          ),
+                          status: 1,
+                          transferNum: amount,
+                        );
+                        _messages.add(chat);
+                        _waitMessages.add(chat);
+                        _textEditingController.text = '';
+                        setState(() {});
+                        _transfer();
                       },
                     ),
                   ],
@@ -175,14 +194,16 @@ class _ChatScreenState extends State<ChatScreen> {
 
   _getList() async {
     var list = await txBuilder.getMessages(_myAddress, _chatAddress);
+    if (list.isNotEmpty) {
+      ChatUtil.updateChatList(list[list.length - 1], _chatAddress);
+    }
     setState(() {
       _messages = list;
     });
   }
 
-  _sendMessage(message) async {
+  Future<void> _checkEnables() async {
     try {
-      EasyLoading.show();
       if (account == null) {
         await _getAccount();
       }
@@ -201,14 +222,7 @@ class _ChatScreenState extends State<ChatScreen> {
       }
       await _checkChatEnable(_myAddress);
       var enable = await _checkChatEnable(_chatAddress);
-      if (enable) {
-        var m = await txBuilder.sendMessage(account!, _chatAddress, message);
-        if (m['hash'].toString().length > 0) {
-          _hashes.add(m['hash']);
-          _messages[_messages.length - 1].hash = m['hash'];
-        }
-        _hashStatus();
-      } else {
+      if (!enable) {
         setState(() {
           _messages[_messages.length - 1].status = 2;
         });
@@ -223,30 +237,85 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  _transfer(String amount) async {
-    try {
-      EasyLoading.show();
-      if (account == null) {
-        await _getAccount();
+  _sendMessage() async {
+    if (!_isSending) {
+      _isSending = true;
+      for (var i = 0; i < _waitMessages.length; i++) {
+        var element = _waitMessages[i];
+        if (element.content.isNotEmpty) {
+          try {
+            await _checkEnables();
+            if (element.transferNum.isEmpty) {
+              var m = await txBuilder.sendMessage(
+                  account!, _chatAddress, element.content);
+              if (m['hash'].toString().length > 0) {
+                _hashes.add(m['hash']);
+                _messages[_messages.length - 1].hash = m['hash'];
+              }
+              _updateMessage(element, 2);
+              _hashStatus();
+            }
+          } catch (e) {
+            setState(() {});
+            _updateMessage(element, 3);
+          } finally {
+            _isSending = false;
+            _waitMessages.removeWhere((e) =>
+                e.content == element.content &&
+                e.info.timestamp == element.info.timestamp);
+            if (_waitMessages
+                .where((element) => element.content.isNotEmpty)
+                .toList()
+                .isNotEmpty) {
+              Future.delayed(Duration(milliseconds: 1000), _sendMessage);
+            }
+          }
+        }
+        break;
       }
-      final result = await txBuilder.getBalanceByAddress(_myAddress);
-      StorageManager.setBalance(result);
-      var num = Decimal.parse(amount);
-      if (num + Decimal.parse('0.000512') > result) {
-        ToastUtil.show('Insufficient balance');
-      } else {
-        var a = (num * Decimal.fromInt(10).pow(8)).toString();
-        var m = await txBuilder.transferAptos(account!, _chatAddress, a);
-        setState(() {
-          _textEditingController.text = '';
-        });
-        print("result $m");
-        ToastUtil.show('Transfer Success');
+    }
+  }
+
+  Future<void> _transfer() async {
+    if (!_isTransfer) {
+      _isTransfer = true;
+      for (var i = 0; i < _waitMessages.length; i++) {
+        var element = _waitMessages[i];
+        try {
+          if (account == null) {
+            await _getAccount();
+          }
+          final result = await txBuilder.getBalanceByAddress(_myAddress);
+          StorageManager.setBalance(result);
+          var num = Decimal.parse(element.transferNum);
+          if (num + Decimal.parse('0.000512') > result) {
+            ToastUtil.show('Insufficient balance');
+            _updateMessage(element, 3);
+          } else {
+            var a = (num * Decimal.fromInt(10).pow(8)).toString();
+            var m = await txBuilder.transferAptos(account!, _chatAddress, a);
+            setState(() {
+              _textEditingController.text = '';
+            });
+            print("result $m");
+            _updateMessage(element, 2);
+          }
+        } catch (e) {
+          _updateMessage(element, 3);
+        } finally {
+          _isTransfer = false;
+          _waitMessages.removeWhere((e) =>
+              e.transferNum == element.transferNum &&
+              e.info.timestamp == element.info.timestamp);
+          if (_waitMessages
+              .where((element) => element.transferNum.isNotEmpty)
+              .toList()
+              .isNotEmpty) {
+            Future.delayed(Duration(milliseconds: 2000), _transfer);
+          }
+        }
+        break;
       }
-    } catch (e) {
-      ToastUtil.show('Transfer Error');
-    } finally {
-      EasyLoading.dismiss();
     }
   }
 
@@ -321,6 +390,18 @@ class _ChatScreenState extends State<ChatScreen> {
       setState(() {});
     } else {
       _hashStatus();
+    }
+  }
+
+  _updateMessage(ChatMessage message, int status) {
+    for (var i = _messages.length - 1; i > -1; i--) {
+      if (_messages[i].info.timestamp == message.info.timestamp &&
+          _messages[i].content == message.content &&
+          _messages[i].transferNum == message.transferNum) {
+        _messages[i].status = status;
+        setState(() {});
+        break;
+      }
     }
   }
 }

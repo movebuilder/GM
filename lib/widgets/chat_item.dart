@@ -106,7 +106,9 @@ class ChatItem extends StatelessWidget {
                 : null,
           ),
           child: Text(
-            message.content,
+            message.transferNum.isNotEmpty
+                ? 'I sent ${message.transferNum} APT to you '
+                : message.content,
             style: TextStyle(
               color: AppTheme.colorFontGM,
               fontSize: 16.sp,

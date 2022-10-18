@@ -28,23 +28,6 @@ class _WebScreenState extends State<WebScreen> {
           Expanded(
             child: Stack(
               children: [
-                progress >= 1.0
-                    ? PreferredSize(
-                        child: Container(),
-                        preferredSize: Size.zero,
-                      )
-                    : PreferredSize(
-                        child: SizedBox(
-                          child: LinearProgressIndicator(
-                            value: progress,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              AppTheme.primaryColor,
-                            ),
-                          ),
-                          height: 2,
-                        ),
-                        preferredSize: Size.fromHeight(2),
-                      ),
                 Positioned.fill(
                   child: InAppWebView(
                     initialUrlRequest: URLRequest(
@@ -58,6 +41,23 @@ class _WebScreenState extends State<WebScreen> {
                       });
                     },
                   ),
+                ),
+                progress >= 1.0
+                    ? PreferredSize(
+                  child: Container(),
+                  preferredSize: Size.zero,
+                )
+                    : PreferredSize(
+                  child: SizedBox(
+                    child: LinearProgressIndicator(
+                      value: progress,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        AppTheme.primaryColor,
+                      ),
+                    ),
+                    height: 2,
+                  ),
+                  preferredSize: Size.fromHeight(2),
                 ),
               ],
             ),

@@ -39,9 +39,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "gm_now": MessageLookupByLibrary.simpleMessage("GM NOW"),
         "import": MessageLookupByLibrary.simpleMessage("Import"),
         "import_hint":
-            MessageLookupByLibrary.simpleMessage("Enter secret phrase"),
+            MessageLookupByLibrary.simpleMessage("Enter secret phrase or private key"),
         "import_sub1":
-            MessageLookupByLibrary.simpleMessage("Your secret phrase"),
+            MessageLookupByLibrary.simpleMessage("Your secret phrase or private key"),
         "import_sub2": MessageLookupByLibrary.simpleMessage(
             "Create new password to unlock your wallet"),
         "import_wallet": MessageLookupByLibrary.simpleMessage("Import Wallet"),
