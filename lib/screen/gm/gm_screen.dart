@@ -132,7 +132,10 @@ class _GmScreenState extends State<GmScreen> {
                           newMatch: true,
                         ),
                       );
+                      StorageManager.addChatMatchAddress(data[0].address ?? "");
                       StorageManager.setChatShortList(list);
+                    } else {
+                      StorageManager.addUnChatMatchAddress(data[0].address ?? "");
                     }
                   },
                   onScaleComplete: () {

@@ -92,24 +92,7 @@
   {
     "address": "0x43b11466323fd2d0ee25df91f7cc98d619d6d8ee9f064ac953a2c572913bc37b",
     "nft": [
-      {
-        "token_id": "0xcd01e6b8254d58a103b639d9ab118173c2b8b5c8effb54f4129e386c8613bc8e::ANS: APTOS Name Service::4785::1",
-        "owner": "0x43b11466323fd2d0ee25df91f7cc98d619d6d8ee9f064ac953a2c572913bc37b",
-        "creator": "0xcd01e6b8254d58a103b639d9ab118173c2b8b5c8effb54f4129e386c8613bc8e",
-        "collection_name": "ANS: APTOS Name Service",
-        "token_name": "4785",
-        "property_version": 1,
-        "collection_id": "0xcd01e6b8254d58a103b639d9ab118173c2b8b5c8effb54f4129e386c8613bc8e::ANS: APTOS Name Service",
-        "collection_slug": "ANS:-APTOS-Name-Service-cd01e6b825",
-        "seller": null,
-        "token_uri": "https://api.apt.store/asset/svg/4785.apt",
-        "preview_uri": null,
-        "is_listed": false,
-        "price": null,
-        "highest_bid": null,
-        "metadatas": null
-      },
-      {
+       {
         "token_id": "0x149959d6121cd7399214e91d82c6db268e537cae2473c11b7a14935bd9635b00::Aptos Ant Club::Aptos Ant Club #9792::0",
         "owner": "0x43b11466323fd2d0ee25df91f7cc98d619d6d8ee9f064ac953a2c572913bc37b",
         "creator": "0x149959d6121cd7399214e91d82c6db268e537cae2473c11b7a14935bd9635b00",

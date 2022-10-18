@@ -13,6 +13,8 @@ class ChatListScreen extends StatefulWidget {
   _ChatListScreenState createState() => _chatListScreenState;
 
   void setBalance(balance) => _chatListScreenState.setBalance(balance);
+
+  void updateLocalList() => _chatListScreenState.updateLocalList();
 }
 
 class _ChatListScreenState extends State<ChatListScreen> {
@@ -24,6 +26,13 @@ class _ChatListScreenState extends State<ChatListScreen> {
     if (mounted)
       setState(() {
         _balance = balance;
+      });
+  }
+
+  void updateLocalList() {
+    if (mounted)
+      setState(() {
+        _list = StorageManager.getChatShortList();
       });
   }
 
@@ -59,8 +68,16 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 itemBuilder: (context, index) {
                   return ChatListItem(
                     _list[index],
-                    index == 0,
+                    index,
                     index == _list.length - 1,
+                    (index) async {
+                      var l = StorageManager.getChatMatchAddress();
+                      l.remove(_list[index].address);
+                      await StorageManager.setChatMatchAddress(l);
+                      _list.remove(_list[index]);
+                      await StorageManager.setChatShortList(_list);
+                      setState(() {});
+                    },
                   );
                 },
               ),
@@ -103,6 +120,9 @@ class _ChatListScreenState extends State<ChatListScreen> {
         }
       }
     });
+    if (l.isNotEmpty) {
+      await StorageManager.setChatShortList(l);
+    }
     setState(() {
       _list = l;
     });

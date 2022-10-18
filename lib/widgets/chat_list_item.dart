@@ -13,11 +13,12 @@ import 'gradient_text.dart';
 import 'line_button.dart';
 
 class ChatListItem extends StatelessWidget {
-  const ChatListItem(this.chat, this.isFirst, this.isLast);
+  const ChatListItem(this.chat, this.index, this.isLast, this.unMatch);
 
   final ChatList chat;
-  final bool isFirst;
+  final int index;
   final bool isLast;
+  final Function(int) unMatch;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,9 @@ class ChatListItem extends StatelessWidget {
         dragDismissible: false,
         children: [
           SlidableAction(
-            onPressed: (context) {},
+            onPressed: (context) {
+              unMatch(index);
+            },
             backgroundColor: Color(0xFFFA4B55),
             foregroundColor: Colors.white,
             label: S.current.unmatch,
@@ -47,7 +50,7 @@ class ChatListItem extends StatelessWidget {
               color: Colors.white,
               child: Column(
                 children: [
-                  if (isFirst) Container(height: 10.w),
+                  if (index == 0) Container(height: 10.w),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 15.w),
                     height: 80.w,

@@ -69,6 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     setState(() {
                       activeTab = tab;
                     });
+                    if (activeTab == AppTab.chat) chat.updateLocalList();
                   }),
             )
           ],

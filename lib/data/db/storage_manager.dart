@@ -19,6 +19,10 @@ class StorageManager {
 
   static const String _chat_enable = "_chat_enable";
 
+  static const String _chat_match_address = "_chat_match_address";
+
+  static const String _chat_unMatch_address = "_chat_unMatch_address";
+
   static init() async {
     _sharedPreferences = await SharedPreferences.getInstance();
   }
@@ -75,6 +79,48 @@ class StorageManager {
       _sharedPreferences.remove(_chat_enable);
     }
     return map;
+  }
+
+  static Future<bool> addChatMatchAddress(String address) async {
+    List<String> addresses = getChatMatchAddress();
+    if (!addresses.contains(address)) {
+      addresses.add(address);
+    }
+    return await setChatMatchAddress(addresses);
+  }
+
+  static Future<bool> setChatMatchAddress(List<String> list) async {
+    return await _sharedPreferences.setStringList(_chat_match_address, list);
+  }
+
+  static List<String> getChatMatchAddress() {
+    List<String>? stringList =
+        _sharedPreferences.getStringList(_chat_match_address);
+    if (stringList == null) {
+      stringList = [];
+    }
+    return stringList;
+  }
+
+  static Future<bool> addUnChatMatchAddress(String address) async {
+    List<String> addresses = getChatMatchAddress();
+    if (!addresses.contains(address)) {
+      addresses.add(address);
+    }
+    return await setChatMatchAddress(addresses);
+  }
+
+  static Future<bool> setUnChatMatchAddress(List<String> list) async {
+    return await _sharedPreferences.setStringList(_chat_unMatch_address, list);
+  }
+
+  static List<String> getUnChatMatchAddress() {
+    List<String>? stringList =
+        _sharedPreferences.getStringList(_chat_unMatch_address);
+    if (stringList == null) {
+      stringList = [];
+    }
+    return stringList;
   }
 
   static Future<bool?> clear() async {
