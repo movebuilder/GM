@@ -5,12 +5,12 @@ class AccountNftList {
   AccountNftList({this.address, this.nft});
 
   AccountNftList.fromJson(Map<String, dynamic> json) {
-    address = json['address'];
     if (json['nft'] != null) {
       nft = <Nft>[];
       json['nft'].forEach((v) {
         nft!.add(new Nft.fromJson(v));
       });
+      address = nft![0].owner;
     }
   }
 
@@ -39,24 +39,25 @@ class Nft {
   bool? isListed;
   int? price;
   String? highestBid;
- // String? metadatas;
 
-  Nft(
-      {this.tokenId,
-      this.owner,
-      this.creator,
-      this.collectionName,
-      this.tokenName,
-      this.propertyVersion,
-      this.collectionId,
-      this.collectionSlug,
-      this.seller,
-      this.tokenUri,
-      this.previewUri,
-      this.isListed,
-      this.price,
-      this.highestBid,
-      //this.metadatas
+  // String? metadatas;
+
+  Nft({
+    this.tokenId,
+    this.owner,
+    this.creator,
+    this.collectionName,
+    this.tokenName,
+    this.propertyVersion,
+    this.collectionId,
+    this.collectionSlug,
+    this.seller,
+    this.tokenUri,
+    this.previewUri,
+    this.isListed,
+    this.price,
+    this.highestBid,
+    //this.metadatas
   });
 
   Nft.fromJson(Map<String, dynamic> json) {
@@ -93,7 +94,7 @@ class Nft {
     data['is_listed'] = this.isListed;
     data['price'] = this.price;
     data['highest_bid'] = this.highestBid;
- //   data['metadatas'] = this.metadatas;
+    //   data['metadatas'] = this.metadatas;
     return data;
   }
 }

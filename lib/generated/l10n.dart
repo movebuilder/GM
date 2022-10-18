@@ -110,10 +110,10 @@ class S {
     );
   }
 
-  /// `Your secret phrase`
+  /// `Your secret phrase or private key`
   String get import_sub1 {
     return Intl.message(
-      'Your secret phrase',
+      'Your secret phrase or private key',
       name: 'import_sub1',
       desc: '',
       args: [],
@@ -130,10 +130,10 @@ class S {
     );
   }
 
-  /// `Enter secret phrase`
+  /// `Enter secret phrase or private key`
   String get import_hint {
     return Intl.message(
-      'Enter secret phrase',
+      'Enter secret phrase or private key',
       name: 'import_hint',
       desc: '',
       args: [],

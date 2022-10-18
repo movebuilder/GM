@@ -28,6 +28,14 @@ Future<List<AccountNftList>> getAccountNftList() async {
       list.add(account);
     }
   });
+  if (list.isEmpty) {
+    l.forEach((element) {
+      var account = AccountNftList.fromJson(element);
+      if (!address1.contains(account.address)) {
+        list.add(account);
+      }
+    });
+  }
   return list;
 }
 

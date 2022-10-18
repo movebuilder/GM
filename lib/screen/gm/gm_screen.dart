@@ -45,7 +45,7 @@ class _GmScreenState extends State<GmScreen> {
   var firstInstall = false;
 
   void _getList() async {
-    await Future.delayed(Duration(milliseconds: 2000));
+    await Future.delayed(Duration(milliseconds: 500));
     data = await getAccountNftList();
     setState(() {});
   }
@@ -65,18 +65,6 @@ class _GmScreenState extends State<GmScreen> {
     leftStart = -66.w;
     y = 304.5.w;
     _getList();
-
-    // var a = '0xc0670a06df6afced1cf66c5d8e198af4117e0eb2cee123a8bcac40a3866ea9df';
-    // var list = StorageManager.getChatShortList();
-    // list.add(
-    //   ChatList(
-    //     address: a,
-    //     nftImg:  "",
-    //     newMatch: true,
-    //   ),
-    // );
-    // StorageManager.addChatMatchAddress(a);
-    // StorageManager.setChatShortList(list);
   }
 
   @override
