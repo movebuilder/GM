@@ -87,16 +87,24 @@ class TxBuilder {
         "0x31182e37835da2913d0e8a2bf28f7c841faf9316a154a88601c1ab7c4d4e48f5"
     );
 
-    final messageData = await client.queryTableItem(
-        handle,
-        tableItem
-    );
+    try {
+      final messageData = await client.queryTableItem(
+          handle,
+          tableItem
+      );
 
-    final messageList = <ChatMessage>[];
-    for (var message in messageData) {
-      messageList.add(ChatMessage.fromJson(message));
+      final messageList = <ChatMessage>[];
+      for (var message in messageData) {
+        messageList.add(ChatMessage.fromJson(message));
+      }
+      return messageList;
+    } catch(e) {
+      dynamic err = e;
+      if (err.response.statusCode == 404) {
+        return <ChatMessage>[];
+      }
+      rethrow;
     }
-    return messageList;
   }
 
   Future<List<ChatMessage>> getMessagesBySender(String address, String sender) async {
