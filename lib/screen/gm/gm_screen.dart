@@ -30,6 +30,7 @@ class _GmScreenState extends State<GmScreen> {
   List<AccountNftList> data = [];
   var tips = [
     "Good Morning",
+    "Glad to Meet you",
     "Glad to message you",
     "Good to match with you",
     "We All Gonna Make It",

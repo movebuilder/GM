@@ -25,7 +25,7 @@ class _ImportWalletState extends State<CreateWalletPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-      padding: EdgeInsets.fromLTRB(27.w, 55.w, 27.w, 38.w),
+      padding: EdgeInsets.fromLTRB(27.w, 40.w, 27.w, 38.w),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,

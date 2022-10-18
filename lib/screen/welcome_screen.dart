@@ -13,6 +13,7 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen> {
   var tips = [
     "Good\nMorning",
+    "Glad to Meet you",
     "Glad to message you",
     "Good to match with you",
     "We All Gonna Make It",
