@@ -53,11 +53,19 @@ class ChatItem extends StatelessWidget {
             height: 42.w,
           ),
           if (!isMine)
-            imageUtils(
-              nft,
-              width: 42.w,
-              height: 42.w,
-            ),
+            (nft.endsWith('.png') ||
+                    nft.endsWith('.jpg') ||
+                    nft.endsWith('.svg'))
+                ? imageNetworkUtils(
+                    nft,
+                    width: 42.w,
+                    height: 42.w,
+                  )
+                : Image.network(
+                    nft,
+                    width: 42.w,
+                    height: 42.w,
+                  ),
           if (!isMine)
             Positioned(
               left: 28.w,

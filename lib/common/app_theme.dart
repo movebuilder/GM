@@ -35,14 +35,14 @@ abstract class AppTheme {
   static ThemeData get themeData => ThemeData(
         primaryColor: primaryColor,
         primaryColorLight: primaryColor.withOpacity(0.5),
-        backgroundColor: backgroundColor,
-        scaffoldBackgroundColor: backgroundColor,
+        backgroundColor: colorWhite,
+        scaffoldBackgroundColor: colorWhite,
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
         hintColor: colorFontGM,
         accentColor: primaryColor.withOpacity(0.5),
         appBarTheme: const AppBarTheme(
-          color: backgroundColor,
+          color: colorWhite,
           elevation: 0,
           titleTextStyle: TextStyle(
             fontWeight: FontWeight.w500,

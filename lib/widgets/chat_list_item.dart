@@ -5,6 +5,8 @@ import 'package:gm/generated/l10n.dart';
 import 'package:gm/modal/chat_list.dart';
 import 'package:gm/route/routes.dart';
 import 'package:gm/util/common_util.dart';
+import 'package:gm/util/fluro_convert_util.dart';
+import 'package:gm/util/image_utils.dart';
 import 'package:gm/util/screen_util.dart';
 
 import 'gradient_text.dart';
@@ -60,10 +62,28 @@ class ChatListItem extends StatelessWidget {
                                 top: 19.w,
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(21.w),
-                                  child: Container(
-                                    color: AppTheme.colorRed.withOpacity(0.5),
-                                    width: 42.w,
-                                    height: 42.w,
+                                  child: Stack(
+                                    children: [
+                                      Container(
+                                        color:
+                                            AppTheme.colorRed.withOpacity(0.5),
+                                        width: 42.w,
+                                        height: 42.w,
+                                      ),
+                                      (chat.nftImg.endsWith('.png') ||
+                                              chat.nftImg.endsWith('.jpg') ||
+                                              chat.nftImg.endsWith('.svg'))
+                                          ? imageNetworkUtils(
+                                              chat.nftImg,
+                                              width: 42.w,
+                                              height: 42.w,
+                                            )
+                                          : Image.network(
+                                              chat.nftImg,
+                                              width: 42.w,
+                                              height: 42.w,
+                                            )
+                                    ],
                                   ),
                                 ),
                               ),
@@ -187,7 +207,9 @@ class ChatListItem extends StatelessWidget {
   }
 
   _goToChat(context) {
-    var path = '${Routes.chat}?chatAddress=${chat.address}&nft=${chat.nftImg}';
+    var path =
+        '${Routes.chat}?chatAddress=${chat.address}&nft=${FluroConvertUtils.fluroCnParamsEncode(chat.nftImg)}';
+    print(path);
     Routes.navigateToInFormRight(context, path);
   }
 }

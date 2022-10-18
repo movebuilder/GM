@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swiper_plus/flutter_swiper_plus.dart';
 import 'package:gm/common/app_theme.dart';
 import 'package:gm/data/db/storage_manager.dart';
+import 'package:gm/modal/account_nft_list.dart';
+import 'package:gm/modal/chat_list.dart';
+import 'package:gm/util/common_util.dart';
 import 'package:gm/util/image_utils.dart';
 import 'package:gm/util/screen_util.dart';
 import 'package:gm/widgets/drag.dart';
@@ -22,10 +25,8 @@ class _GmScreenState extends State<GmScreen> {
   Decimal _balance = Decimal.zero;
 
   DragController _dragController = DragController();
-  List data = [
-    'https://scpic2.chinaz.net/files/default/imgs/2022-10-08/ed217ec122a67134_s.jpg',
-    'https://scpic2.chinaz.net/files/default/imgs/2022-10-12/bd7da34f0534db82_s.jpg'
-  ];
+
+  List<AccountNftList> data = [];
   var tips = [
     "Good Morning",
     "Glad to message to you",
@@ -40,18 +41,11 @@ class _GmScreenState extends State<GmScreen> {
   double scare1 = 1;
   double scare2 = 1;
 
-  List imageList = [];
-
   var firstInstall = false;
 
-  void loadData() async {
-    await Future.delayed(Duration(milliseconds: 100));
-    imageList.addAll(data);
-
-    if (StorageManager.getFirstInstall()) {
-      firstInstall = true;
-      StorageManager.setFirstInstall(false);
-    }
+  void _getList() async {
+    await Future.delayed(Duration(milliseconds: 2000));
+    data = await getAccountNftList();
     setState(() {});
   }
 
@@ -69,7 +63,7 @@ class _GmScreenState extends State<GmScreen> {
     rightStart = 375.w;
     leftStart = -66.w;
     y = 304.5.w;
-    loadData();
+    _getList();
   }
 
   @override
@@ -92,52 +86,71 @@ class _GmScreenState extends State<GmScreen> {
       children: [
         Container(
           padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.w),
-          child: DragLike(
-            dragController: _dragController,
-            duration: Duration(milliseconds: 520),
-            child: imageList.length <= 0
-                ? _buildBackground()
-                : _buildImage(imageList[0], firstInstall),
-            secondChild: imageList.length <= 1
-                ? _buildBackground()
-                : _buildImage(imageList[1], false),
-            screenWidth: 375.w,
-            outValue: 0.8,
-            dragSpeed: 1000,
-            onChangeDragDistance: (distance) {
-              var d = distance['distanceProgress'];
-              if (distance['distance'] < 0) {
-                scare1 = 1;
-                scare2 = 1 + 1.7 * d;
-                rightStart = 375.w;
-                leftStart = -33.w + 175.w * d;
-              } else {
-                scare2 = 1;
-                scare1 = 1 + 1.7 * d;
-                leftStart = -33.w;
-                rightStart = 375.w - 175.w * d;
-              }
-              firstInstall = false;
-              setState(() {});
-            },
-            onOutComplete: (type) {
-              print(type);
-            },
-            onScaleComplete: () {
-              imageList.remove(imageList[0]);
-              if (imageList.length == 0) {
-                loadData();
-              }
-            },
-            onPointerUp: () {
-              setState(() {
-                rightStart = 375.w;
-                leftStart = -33.w;
-                scare1 = 1;
-                scare2 = 1;
-              });
-            },
-          ),
+          child: data.length <= 0
+              ? _buildBackground()
+              : DragLike(
+                  dragController: _dragController,
+                  duration: Duration(milliseconds: 520),
+                  child: data.length <= 0
+                      ? _buildBackground()
+                      : Drag(
+                          src: data[0].nft![0].tokenUri ?? "",
+                          firstInstall: firstInstall,
+                        ),
+                  secondChild: data.length <= 1
+                      ? _buildBackground()
+                      : Drag(
+                          src: data[1].nft![0].tokenUri ?? "",
+                          firstInstall: false,
+                        ),
+                  screenWidth: 375,
+                  outValue: 0.8,
+                  dragSpeed: 1000,
+                  onChangeDragDistance: (distance) {
+                    var d = distance['distanceProgress'];
+                    if (distance['distance'] < 0) {
+                      scare1 = 1;
+                      scare2 = 1 + 1.7 * d;
+                      rightStart = 375.w;
+                      leftStart = -33.w + 175.w * d;
+                    } else {
+                      scare2 = 1;
+                      scare1 = 1 + 1.7 * d;
+                      leftStart = -33.w;
+                      rightStart = 375.w - 175.w * d;
+                    }
+                    firstInstall = false;
+                    setState(() {});
+                  },
+                  onOutComplete: (type) {
+                    if (type == "right") {
+                      var list = StorageManager.getChatShortList();
+                      list.add(
+                        ChatList(
+                          address: data[0].address ?? "",
+                          nftImg: data[0].nft![0].tokenUri ?? "",
+                          newMatch: true,
+                        ),
+                      );
+                      StorageManager.setChatShortList(list);
+                    }
+                  },
+                  onScaleComplete: () {
+                    data.remove(data[0]);
+                    if (data.length == 0) {
+                      _getList();
+                    }
+                    setState(() {});
+                  },
+                  onPointerUp: () {
+                    setState(() {
+                      rightStart = 375.w;
+                      leftStart = -33.w;
+                      scare1 = 1;
+                      scare2 = 1;
+                    });
+                  },
+                ),
         ),
         Transform.translate(
           offset: Offset(rightStart, y),
@@ -157,24 +170,10 @@ class _GmScreenState extends State<GmScreen> {
     );
   }
 
-  _buildImage(src, firstInstall) {
-    return Stack(
-      children: [
-        _buildBackground(),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(16.w),
-          child: Drag(
-            src: src,
-            firstInstall: firstInstall,
-          ),
-        ),
-      ],
-    );
-  }
-
   _buildBackground() {
     return Container(
       alignment: Alignment.center,
+      margin: EdgeInsets.all(0.8.w),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.w),
         color: AppTheme.colorWhite,

@@ -17,12 +17,9 @@ class Drag extends StatefulWidget {
 }
 
 class _DragState extends State<Drag> {
-  late List<String> list;
-
   @override
   void initState() {
     super.initState();
-    list = [widget.src, widget.src, widget.src, widget.src];
   }
 
   @override
@@ -34,14 +31,7 @@ class _DragState extends State<Drag> {
       child: Stack(
         children: [
           Positioned.fill(
-            child: ListView.builder(
-              padding: EdgeInsets.only(top: 0),
-              controller: ScrollController(),
-              itemCount: list.length,
-              itemBuilder: (context, index) {
-                return imageNetworkUtils(list[index], fit: BoxFit.fitWidth);
-              },
-            ),
+            child: imageNetworkUtils(widget.src),
           ),
           if (widget.firstInstall)
             Positioned(

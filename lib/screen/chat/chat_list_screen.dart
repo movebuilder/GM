@@ -1,6 +1,5 @@
 import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
-import 'package:gm/aptos/transaction/chat_message.dart';
 import 'package:gm/aptos/transaction/tx_builder.dart';
 import 'package:gm/data/db/storage_manager.dart';
 import 'package:gm/modal/chat_list.dart';

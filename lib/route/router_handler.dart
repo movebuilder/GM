@@ -10,6 +10,7 @@ import 'package:gm/screen/home_screen.dart';
 import 'package:gm/screen/import_wallet.dart';
 import 'package:gm/screen/register_page.dart';
 import 'package:gm/screen/welcome_screen.dart';
+import 'package:gm/util/fluro_convert_util.dart';
 
 var mainHandler = Handler(
   handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
@@ -62,7 +63,10 @@ var secretPhraseHandler = Handler(
 var chatHandler = Handler(
   handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     final String chatAddress = params["chatAddress"]?.first ?? '';
-    final String nft = params["nft"]?.first ?? '';
+    String nft = params["nft"]?.first ?? '';
+    if (nft.isNotEmpty) {
+      nft = FluroConvertUtils.fluroCnParamsDecode(nft);
+    }
     return ChatScreen(chatAddress: chatAddress, nft: nft);
   },
 );
