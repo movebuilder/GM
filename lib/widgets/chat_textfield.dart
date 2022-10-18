@@ -54,10 +54,7 @@ class _ChatTextFieldState extends State<ChatTextField> {
 
   @override
   Widget build(BuildContext context) {
-    var paddingBottom = MediaQuery.of(context).padding.bottom;
-    double bottom = widget.isKeyboardVisible
-        ? 10.w
-        : 10.w + (paddingBottom < 20.w ? 20.w - paddingBottom : 0);
+    double bottom = widget.isKeyboardVisible ? 10.w : 30.w;
     return Container(
       width: 375.w,
       decoration: BoxDecoration(
@@ -103,16 +100,14 @@ class _ChatTextFieldState extends State<ChatTextField> {
                 width: 20.w,
               ),
             ),
-          if (_showTransferIcon) SizedBox(width: 10.w),
           Expanded(
             child: TextField(
               controller: textEditingController,
               textInputAction: TextInputAction.send,
               cursorColor: AppTheme.colorRed,
               onChanged: (s) {},
-              inputFormatters: _showTransferIcon
-                  ? [PrecisionInputFormatter()]
-                  : null,
+              inputFormatters:
+                  _showTransferIcon ? [PrecisionInputFormatter()] : null,
               keyboardType: _showTransferIcon
                   ? TextInputType.numberWithOptions(decimal: true)
                   : TextInputType.text,

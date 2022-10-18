@@ -8,6 +8,7 @@ import 'package:gm/util/screen_util.dart';
 class ChatItem extends StatelessWidget {
   final ChatMessage message;
   final String nft;
+  final String myNft;
 
   String get address => StorageManager.getAddress();
 
@@ -15,6 +16,7 @@ class ChatItem extends StatelessWidget {
     Key? key,
     required this.message,
     required this.nft,
+    required this.myNft,
   }) : super(key: key);
 
   @override
@@ -38,34 +40,28 @@ class ChatItem extends StatelessWidget {
   }
 
   _buildAvatar(isMine) {
+    var url = isMine ? myNft : nft;
     return Container(
       width: 50.w,
       height: 42.w,
       padding: isMine ? EdgeInsets.only(left: 8.w) : null,
       child: Stack(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              color: AppTheme.colorRed.withOpacity(0.5),
-              borderRadius: BorderRadius.all(Radius.circular(21.w)),
-            ),
-            width: 42.w,
-            height: 42.w,
-          ),
-          if (!isMine)
-            (nft.endsWith('.png') ||
-                    nft.endsWith('.jpg') ||
-                    nft.endsWith('.svg'))
-                ? imageNetworkUtils(
-                    nft,
-                    width: 42.w,
-                    height: 42.w,
-                  )
-                : Image.network(
-                    nft,
-                    width: 42.w,
-                    height: 42.w,
-                  ),
+          (url.isEmpty ||
+                  url.endsWith('.png') ||
+                  url.endsWith('.jpg') ||
+                  url.endsWith('.svg'))
+              ? imageNetworkUtils(
+                  url,
+                  width: 42.w,
+                  height: 42.w,
+                  placeholder: 'avatar.png',
+                )
+              : Image.network(
+                  url,
+                  width: 42.w,
+                  height: 42.w,
+                ),
           if (!isMine)
             Positioned(
               left: 28.w,

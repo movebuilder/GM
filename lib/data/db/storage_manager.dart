@@ -51,13 +51,19 @@ class StorageManager {
 
   static List<ChatList> getChatShortList() {
     List<String>? stringList =
-        _sharedPreferences.getStringList(_chat_short_list);
+    _sharedPreferences.getStringList(_chat_short_list);
     List<ChatList> history = [];
     try {
       if (stringList != null && stringList.length > 0) {
         history =
             stringList.map((e) => ChatList.fromJson(jsonDecode(e))).toList();
-        history.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+        var h1 = history.where((element) => element.newMatch).toList();
+        var h2 = history.where((element) => !element.newMatch).toList();
+        h1.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+        h2.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+        history = [];
+        history.addAll(h1);
+        history.addAll(h2);
       }
     } catch (e) {
       _sharedPreferences.remove(_chat_short_list);
@@ -96,7 +102,7 @@ class StorageManager {
 
   static List<String> getChatMatchAddress() {
     List<String>? stringList =
-        _sharedPreferences.getStringList(_chat_match_address);
+    _sharedPreferences.getStringList(_chat_match_address);
     if (stringList == null) {
       stringList = [];
     }
@@ -117,7 +123,7 @@ class StorageManager {
 
   static List<String> getUnChatMatchAddress() {
     List<String>? stringList =
-        _sharedPreferences.getStringList(_chat_unMatch_address);
+    _sharedPreferences.getStringList(_chat_unMatch_address);
     if (stringList == null) {
       stringList = [];
     }
@@ -130,5 +136,8 @@ class StorageManager {
     prefs.remove(_account_balance);
   }
 
-  static bool login() => StorageManager.getAddress().isEmpty ? false : true;
+  static bool login() =>
+      StorageManager
+          .getAddress()
+          .isEmpty ? false : true;
 }

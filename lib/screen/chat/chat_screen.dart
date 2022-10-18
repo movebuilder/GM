@@ -94,40 +94,38 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
             Positioned(
-              top: 94.w - ScreenUtil.statusBarHeight,
+              top: 94.w,
               left: 0,
               right: 0,
               bottom: 0,
               child: Container(
-                child: SafeArea(
-                  child: Column(
-                    children: <Widget>[
-                      _buildMessages(),
-                      ChatTextField(
-                        isKeyboardVisible: isKeyboardVisible,
-                        textEditingController: _textEditingController,
-                        focusNode: _focusNode,
-                        sendMsg: () {
-                          _scrollController.jumpTo(0.0);
-                          var msg = _textEditingController.text;
-                          _messages.add(ChatMessage(
-                            msg,
-                            MessageInfo(
-                              _myAddress,
-                              DateTime.now().microsecondsSinceEpoch.toString(),
-                            ),
-                            status: 1,
-                          ));
-                          _textEditingController.text = '';
-                          setState(() {});
-                          _sendMessage(msg);
-                        },
-                        transfer: (amount) {
-                          _transfer(amount);
-                        },
-                      ),
-                    ],
-                  ),
+                child: Column(
+                  children: <Widget>[
+                    _buildMessages(),
+                    ChatTextField(
+                      isKeyboardVisible: isKeyboardVisible,
+                      textEditingController: _textEditingController,
+                      focusNode: _focusNode,
+                      sendMsg: () {
+                        _scrollController.jumpTo(0.0);
+                        var msg = _textEditingController.text;
+                        _messages.add(ChatMessage(
+                          msg,
+                          MessageInfo(
+                            _myAddress,
+                            DateTime.now().microsecondsSinceEpoch.toString(),
+                          ),
+                          status: 1,
+                        ));
+                        _textEditingController.text = '';
+                        setState(() {});
+                        _sendMessage(msg);
+                      },
+                      transfer: (amount) {
+                        _transfer(amount);
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -156,6 +154,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       return ChatItem(
                         message: _messages[(_messages.length - 1) - i],
                         nft: widget.nft,
+                        myNft: '',
                       );
                     },
                     childCount: _messages.length,

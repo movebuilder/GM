@@ -65,30 +65,19 @@ class ChatListItem extends StatelessWidget {
                                 top: 19.w,
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(21.w),
-                                  child: Stack(
-                                    children: [
-                                      Container(
-                                        color:
-                                            AppTheme.colorRed.withOpacity(0.5),
-                                        width: 42.w,
-                                        height: 42.w,
-                                      ),
-                                      if (chat.nftImg.isNotEmpty)
-                                        (chat.nftImg.endsWith('.png') ||
-                                                chat.nftImg.endsWith('.jpg') ||
-                                                chat.nftImg.endsWith('.svg'))
-                                            ? imageNetworkUtils(
-                                                chat.nftImg,
-                                                width: 42.w,
-                                                height: 42.w,
-                                              )
-                                            : Image.network(
-                                                chat.nftImg,
-                                                width: 42.w,
-                                                height: 42.w,
-                                              )
-                                    ],
-                                  ),
+                                  child: (chat.nftImg.isEmpty ||
+                                          chat.nftImg.endsWith('.png') ||
+                                          chat.nftImg.endsWith('.jpg') ||
+                                          chat.nftImg.endsWith('.svg'))
+                                      ? imageNetworkUtils(chat.nftImg,
+                                          width: 42.w,
+                                          height: 42.w,
+                                          placeholder: 'avatar.png')
+                                      : Image.network(
+                                          chat.nftImg,
+                                          width: 42.w,
+                                          height: 42.w,
+                                        ),
                                 ),
                               ),
                               // Positioned(
