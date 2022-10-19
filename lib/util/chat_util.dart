@@ -7,7 +7,8 @@ class ChatUtil {
     var list = StorageManager.getChatShortList();
     list.forEach((element) {
       if (element.address == toAddress) {
-        if (element.timestamp.compareTo(message.info.timestamp) < 0) {
+        if (element.content.isEmpty ||
+            element.timestamp.compareTo(message.info.timestamp) < 0) {
           element.content = message.content;
           element.timestamp = message.info.timestamp;
           element.newMatch = false;

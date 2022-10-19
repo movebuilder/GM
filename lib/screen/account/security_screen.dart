@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:gm/aptos/wallet/key_manager.dart';
 import 'package:gm/generated/l10n.dart';
 import 'package:gm/route/routes.dart';
@@ -22,32 +21,45 @@ class _SecurityScreenState extends State<SecurityScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
+      body: Stack(
         children: [
-          GmAppBar(title: S.current.security),
-          SizedBox(height: 155.w),
-          imageUtils('secret.svg', width: 80),
-          SizedBox(height: 54.w),
-          GMTextField(
-            hintText: S.current.current_password,
-            width: 320.w,
-            padding: EdgeInsets.only(left: 15.w),
-            showPassword: true,
-            isPassword: true,
-            height: 55.w,
-            text: _password,
-            leftIcon: 'assets/svgs/password.svg',
-            onChange: (value) {
-              _password = value;
-            },
+          Positioned.fill(
+            child: Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(top: 94.w),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  imageUtils('secret.svg', width: 80),
+                  SizedBox(height: 54.w),
+                  GMTextField(
+                    hintText: S.current.current_password,
+                    width: 320.w,
+                    padding: EdgeInsets.only(left: 15.w),
+                    showPassword: true,
+                    isPassword: true,
+                    height: 55.w,
+                    text: _password,
+                    leftIcon: 'assets/svgs/password.svg',
+                    onChange: (value) {
+                      _password = value;
+                    },
+                  ),
+                  SizedBox(height: 23.w),
+                  LineButton(
+                    text: S.current.confirm,
+                    width: 320,
+                    onTap: () {
+                      _decrypt();
+                    },
+                  )
+                ],
+              ),
+            ),
           ),
-          SizedBox(height: 23.w),
-          LineButton(
-            text: S.current.confirm,
-            width: 320,
-            onTap: () {
-              _decrypt();
-            },
+          Positioned(
+            child: GmAppBar(title: S.current.security),
+            top: 0,
           ),
         ],
       ),

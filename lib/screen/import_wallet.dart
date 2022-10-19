@@ -206,7 +206,7 @@ class _ImportWalletState extends State<ImportWalletPage> {
         }
       }
       EasyLoading.dismiss();
-      route.navigateTo(context, Routes.root, replace: true);
+      route.navigateTo(context, Routes.root, clearStack: true);
     } catch (e) {
       print(e);
       EasyLoading.dismiss();

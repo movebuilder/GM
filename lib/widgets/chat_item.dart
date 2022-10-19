@@ -47,21 +47,24 @@ class ChatItem extends StatelessWidget {
       padding: isMine ? EdgeInsets.only(left: 8.w) : null,
       child: Stack(
         children: [
-          (url.isEmpty ||
-                  url.endsWith('.png') ||
-                  url.endsWith('.jpg') ||
-                  url.endsWith('.svg'))
-              ? imageNetworkUtils(
-                  url,
-                  width: 42.w,
-                  height: 42.w,
-                  placeholder: 'avatar.png',
-                )
-              : Image.network(
-                  url,
-                  width: 42.w,
-                  height: 42.w,
-                ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(21.w),
+            child: (url.isEmpty ||
+                    url.endsWith('.png') ||
+                    url.endsWith('.jpg') ||
+                    url.endsWith('.svg'))
+                ? imageNetworkUtils(
+                    url,
+                    width: 42.w,
+                    height: 42.w,
+                    placeholder: 'avatar.png',
+                  )
+                : Image.network(
+                    url,
+                    width: 42.w,
+                    height: 42.w,
+                  ),
+          ),
           if (!isMine)
             Positioned(
               left: 28.w,

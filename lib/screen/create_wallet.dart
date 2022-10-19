@@ -1,6 +1,7 @@
 import 'package:aptos/aptos_account.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:gm/aptos/wallet/key_manager.dart';
 import 'package:gm/common/app_theme.dart';
 import 'package:gm/data/db/storage_manager.dart';
@@ -25,7 +26,6 @@ class _ImportWalletState extends State<CreateWalletPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-      padding: EdgeInsets.fromLTRB(27.w, 40.w, 27.w, 38.w),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -36,54 +36,81 @@ class _ImportWalletState extends State<CreateWalletPage> {
           ]),
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          _title(),
-          SizedBox(height: 135.w),
-          imageUtils(
-            'aptos.svg',
-            width: 70.w,
-            height: 70.w,
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              top: 10.w,
-              bottom: 28.w,
-            ),
-            child: Text(
-              'APTOS Wallet',
-              style: TextStyle(
-                color: AppTheme.colorFontGM,
-                fontSize: 14.sp,
+      child: KeyboardDismissOnTap(
+        child: KeyboardVisibilityBuilder(builder: (context, isKeyboardVisible) {
+          return Stack(
+            children: [
+              Positioned(
+                top: 0.w,
+                child: _title(),
               ),
-            ),
-          ),
-          _subTitle('Create new password to unlock your wallet'),
-          _itemPassword(1),
-          SizedBox(height: 20.w),
-          _itemPassword(2),
-          SizedBox(height: 20.w),
-          Text(
-            _errorText,
-            style: TextStyle(
-              color: AppTheme.colorRed,
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
-              height: 1.3,
-            ),
-          ),
-          Expanded(
-              child: Container(
-            height: 30.w,
-          )),
-          LineButton(
-            text: 'Create',
-            onTap: () {
-              _createWallet();
-            },
-          ),
-        ],
+              Positioned(
+                bottom: 0.w,
+                top: 94.w,
+                left: 0,
+                right: 0,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: EdgeInsets.symmetric(horizontal: 27.w),
+                        child: Column(
+                          children: <Widget>[
+                            SizedBox(height: 120.w),
+                            imageUtils(
+                              'aptos.svg',
+                              width: 70.w,
+                              height: 70.w,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                top: 10.w,
+                                bottom: 28.w,
+                              ),
+                              child: Text(
+                                'APTOS Wallet',
+                                style: TextStyle(
+                                  color: AppTheme.colorFontGM,
+                                  fontSize: 14.sp,
+                                ),
+                              ),
+                            ),
+                            _subTitle(
+                                'Create new password to unlock your wallet'),
+                            _itemPassword(1),
+                            SizedBox(height: 20.w),
+                            _itemPassword(2),
+                            SizedBox(height: 20.w),
+                            Text(
+                              _errorText,
+                              style: TextStyle(
+                                color: AppTheme.colorRed,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
+                                height: 1.3,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    isKeyboardVisible
+                        ? SizedBox()
+                        : Padding(
+                            padding: EdgeInsets.only(bottom: 38.w),
+                            child: LineButton(
+                              text: 'Create',
+                              onTap: () {
+                                _createWallet();
+                              },
+                            ),
+                          ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        }),
       ),
     ));
   }
@@ -91,7 +118,9 @@ class _ImportWalletState extends State<CreateWalletPage> {
   _title() {
     return Container(
       width: 375.w,
-      alignment: Alignment.center,
+      height: 94.w,
+      padding: EdgeInsets.only(top: 55.w),
+      alignment: Alignment.topCenter,
       child: Text(
         S.current.import_wallet,
         textAlign: TextAlign.center,
@@ -166,7 +195,7 @@ class _ImportWalletState extends State<CreateWalletPage> {
           await StorageManager.setAddress(account.accountAddress.hex());
         }
         EasyLoading.dismiss();
-        route.navigateTo(context, Routes.root, replace: true);
+        route.navigateTo(context, Routes.root, clearStack: true);
       } catch (e) {
         EasyLoading.dismiss();
         setState(() {
