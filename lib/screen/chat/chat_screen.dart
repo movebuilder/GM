@@ -202,7 +202,7 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
-  Future<void> _checkEnables() async {
+  Future<bool> _checkEnables() async {
     try {
       if (account == null) {
         await _getAccount();
@@ -224,14 +224,17 @@ class _ChatScreenState extends State<ChatScreen> {
       var enable = await _checkChatEnable(_chatAddress);
       if (!enable) {
         setState(() {
-          _messages[_messages.length - 1].status = 2;
+          _messages[_messages.length - 1].status = 3;
         });
+        return false;
+      } else {
+        return true;
       }
     } catch (e) {
       setState(() {
-        _messages[_messages.length - 1].status = 2;
+        _messages[_messages.length - 1].status = 3;
       });
-      ToastUtil.show('Transfer Error');
+      return false;
     } finally {
       EasyLoading.dismiss();
     }
@@ -244,17 +247,16 @@ class _ChatScreenState extends State<ChatScreen> {
         var element = _waitMessages[i];
         if (element.content.isNotEmpty) {
           try {
-            await _checkEnables();
-            if (element.transferNum.isEmpty) {
-              var m = await txBuilder.sendMessage(
-                  account!, _chatAddress, element.content);
-              if (m['hash'].toString().length > 0) {
-                _hashes.add(m['hash']);
-                _messages[_messages.length - 1].hash = m['hash'];
-              }
-              _updateMessage(element, 2);
-              _hashStatus();
+            var enable = await _checkEnables();
+            if (!enable) return;
+            var m = await txBuilder.sendMessage(
+                account!, _chatAddress, element.content);
+            if (m['hash'].toString().length > 0) {
+              _hashes.add(m['hash']);
+              _messages[_messages.length - 1].hash = m['hash'];
             }
+            _updateMessage(element, 2);
+            _hashStatus();
           } catch (e) {
             setState(() {});
             _updateMessage(element, 3);
@@ -281,40 +283,42 @@ class _ChatScreenState extends State<ChatScreen> {
       _isTransfer = true;
       for (var i = 0; i < _waitMessages.length; i++) {
         var element = _waitMessages[i];
-        try {
-          if (account == null) {
-            await _getAccount();
-          }
-          final result = await txBuilder.getBalanceByAddress(_myAddress);
-          StorageManager.setBalance(result);
-          var num = Decimal.parse(element.transferNum);
-          if (num + Decimal.parse('0.000512') > result) {
-            ToastUtil.show('Insufficient balance');
+        if (element.transferNum.isNotEmpty) {
+          try {
+            if (account == null) {
+              await _getAccount();
+            }
+            final result = await txBuilder.getBalanceByAddress(_myAddress);
+            StorageManager.setBalance(result);
+            var num = Decimal.parse(element.transferNum);
+            if (num + Decimal.parse('0.000512') > result) {
+              ToastUtil.show('Insufficient balance');
+              _updateMessage(element, 3);
+            } else {
+              var a = (num * Decimal.fromInt(10).pow(8)).toString();
+              var m = await txBuilder.transferAptos(account!, _chatAddress, a);
+              setState(() {
+                _textEditingController.text = '';
+              });
+              print("result $m");
+              _updateMessage(element, 2);
+            }
+          } catch (e) {
             _updateMessage(element, 3);
-          } else {
-            var a = (num * Decimal.fromInt(10).pow(8)).toString();
-            var m = await txBuilder.transferAptos(account!, _chatAddress, a);
-            setState(() {
-              _textEditingController.text = '';
-            });
-            print("result $m");
-            _updateMessage(element, 2);
+          } finally {
+            _isTransfer = false;
+            _waitMessages.removeWhere((e) =>
+                e.transferNum == element.transferNum &&
+                e.info.timestamp == element.info.timestamp);
+            if (_waitMessages
+                .where((element) => element.transferNum.isNotEmpty)
+                .toList()
+                .isNotEmpty) {
+              Future.delayed(Duration(milliseconds: 2000), _transfer);
+            }
           }
-        } catch (e) {
-          _updateMessage(element, 3);
-        } finally {
-          _isTransfer = false;
-          _waitMessages.removeWhere((e) =>
-              e.transferNum == element.transferNum &&
-              e.info.timestamp == element.info.timestamp);
-          if (_waitMessages
-              .where((element) => element.transferNum.isNotEmpty)
-              .toList()
-              .isNotEmpty) {
-            Future.delayed(Duration(milliseconds: 2000), _transfer);
-          }
+          break;
         }
-        break;
       }
     }
   }

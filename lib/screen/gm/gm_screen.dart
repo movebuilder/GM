@@ -69,7 +69,7 @@ class _GmScreenState extends State<GmScreen> {
       firstInstall = true;
       StorageManager.setFirstInstall(false);
       var a =
-          '0x7096e201d1d06ef288b9967eb2306265f1171bf396b50fced67f18674bdc5081';
+          '0xb5d7b4943aadce9b116711d8b932afcccd5e09bdf647639657f76753198c97d3';
       var list = StorageManager.getChatShortList();
       list.add(
         ChatList(
