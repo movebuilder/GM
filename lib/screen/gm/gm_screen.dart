@@ -45,7 +45,7 @@ class _GmScreenState extends State<GmScreen> {
   var firstInstall = false;
 
   void _getList() async {
-    await Future.delayed(Duration(milliseconds: 500));
+    await Future.delayed(Duration(milliseconds: 2000));
     data = await getAccountNftList();
     setState(() {});
   }
@@ -64,6 +64,22 @@ class _GmScreenState extends State<GmScreen> {
     rightStart = 375.w;
     leftStart = -66.w;
     y = 304.5.w;
+    if (StorageManager.getFirstInstall()) {
+      firstInstall = true;
+      StorageManager.setFirstInstall(false);
+      var a =
+          '0x7096e201d1d06ef288b9967eb2306265f1171bf396b50fced67f18674bdc5081';
+      var list = StorageManager.getChatShortList();
+      list.add(
+        ChatList(
+          address: a,
+          newMatch: true,
+          timestamp: DateTime.now().microsecondsSinceEpoch.toString(),
+        ),
+      );
+      StorageManager.addChatMatchAddress(a);
+      StorageManager.setChatShortList(list);
+    }
     _getList();
   }
 
@@ -132,12 +148,15 @@ class _GmScreenState extends State<GmScreen> {
                           address: data[0].address ?? "",
                           nftImg: data[0].nft![0].tokenUri ?? "",
                           newMatch: true,
+                          timestamp:
+                              DateTime.now().microsecondsSinceEpoch.toString(),
                         ),
                       );
                       StorageManager.addChatMatchAddress(data[0].address ?? "");
                       StorageManager.setChatShortList(list);
                     } else {
-                      StorageManager.addUnChatMatchAddress(data[0].address ?? "");
+                      StorageManager.addUnChatMatchAddress(
+                          data[0].address ?? "");
                     }
                   },
                   onScaleComplete: () {
