@@ -29,12 +29,12 @@ class _SecurityScreenState extends State<SecurityScreen> {
           imageUtils('secret.svg', width: 80),
           SizedBox(height: 54.w),
           GMTextField(
-            hintText: S.current.new_password1,
-            width: 305,
+            hintText: S.current.current_password,
+            width: 320.w,
             padding: EdgeInsets.only(left: 15.w),
             showPassword: true,
             isPassword: true,
-            height: 60.w,
+            height: 55.w,
             text: _password,
             leftIcon: 'assets/svgs/password.svg',
             onChange: (value) {
@@ -56,15 +56,18 @@ class _SecurityScreenState extends State<SecurityScreen> {
 
   _decrypt() async {
     try {
-      EasyLoading.show();
-      String mnemonic = await KeyManager.getMnemonic(_password);
-      var path = '${Routes.secretPhrase}?mnemonic=$mnemonic';
+      String secretPhrase = "";
+      bool existMnemonics = await KeyManager.isExistMnemonic();
+      if (existMnemonics) {
+        secretPhrase = await KeyManager.getMnemonic(_password);
+      } else {
+        secretPhrase = await KeyManager.getPrivateKey(_password);
+      }
+      var path = '${Routes.secretPhrase}?mnemonic=$secretPhrase';
       Routes.navigateToInFormRight(context, path, replace: true);
     } catch (e) {
       ToastUtil.show(S.current.invalid_password);
       debugPrint('Mnemonic decrypt error: $e');
-    } finally {
-      EasyLoading.dismiss();
     }
   }
 }

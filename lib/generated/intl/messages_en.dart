@@ -30,7 +30,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
         "copied": MessageLookupByLibrary.simpleMessage("Copied"),
-        "copy": MessageLookupByLibrary.simpleMessage("copy"),
+        "copy": MessageLookupByLibrary.simpleMessage("Copy"),
+        "current_password":
+            MessageLookupByLibrary.simpleMessage("Current password"),
         "details": MessageLookupByLibrary.simpleMessage("Transaction details"),
         "enter_same_password":
             MessageLookupByLibrary.simpleMessage("Enter the same password"),

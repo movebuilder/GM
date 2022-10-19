@@ -160,6 +160,16 @@ class S {
     );
   }
 
+  /// `Current password`
+  String get current_password {
+    return Intl.message(
+      'Current password',
+      name: 'current_password',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Confirm`
   String get confirm {
     return Intl.message(
@@ -240,10 +250,10 @@ class S {
     );
   }
 
-  /// `copy`
+  /// `Copy`
   String get copy {
     return Intl.message(
-      'copy',
+      'Copy',
       name: 'copy',
       desc: '',
       args: [],
