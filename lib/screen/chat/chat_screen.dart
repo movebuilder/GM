@@ -57,6 +57,9 @@ class _ChatScreenState extends State<ChatScreen> {
   List<ChatMessage> _waitMessages = [];
   var _isSending = false;
   var _isTransfer = false;
+  var _isHashing = false;
+
+  var lastSendTime = '';
 
   @override
   void initState() {
@@ -68,12 +71,18 @@ class _ChatScreenState extends State<ChatScreen> {
     _myChatEnable = _chatEnable[_myAddress] ?? false;
     _sendChatEnable = _chatEnable[_chatAddress] ?? false;
     _getList();
+    if (!_myChatEnable) _checkChatEnable(_myAddress);
+    if (!_sendChatEnable) _checkChatEnable(_chatAddress);
+
+    Future.delayed(Duration(seconds: 2), _updateList);
   }
 
   @override
   void dispose() {
     _focusNode.dispose();
     _scrollController.dispose();
+    _timer?.cancel();
+    _timer = null;
     super.dispose();
   }
 
@@ -196,6 +205,7 @@ class _ChatScreenState extends State<ChatScreen> {
     var list = await txBuilder.getMessages(_myAddress, _chatAddress);
     if (list.isNotEmpty) {
       ChatUtil.updateChatList(list[list.length - 1], _chatAddress);
+      lastSendTime = list[list.length - 1].info.timestamp;
     }
     setState(() {
       _messages = list;
@@ -363,37 +373,29 @@ class _ChatScreenState extends State<ChatScreen> {
     return true;
   }
 
-  _hashStatus() {
-    if (_timer != null) {
-      _timer?.cancel();
-      _timer = null;
-    }
-    _timer = Timer.periodic(Duration(seconds: 2), (val) {
-      if (_hashes.isEmpty) {
-        _timer?.cancel();
-        _timer = null;
-      } else {
-        _hashes.forEach((element) {
-          _getHashStatus(element);
-        });
-      }
-    });
-  }
-
-  _getHashStatus(hash) async {
-    var pending = await txBuilder.isPending(hash);
-    if (!pending) {
-      _hashes.remove(hash);
-      for (var i = _messages.length - 1; i > -1; i--) {
-        if (_messages[i].hash == hash) {
-          _messages[i].status = 2;
-          await ChatUtil.updateChatList(_messages[i], _chatAddress);
-          break;
+  _hashStatus() async {
+    if (_hashes.isEmpty && !_isHashing) {
+      try {
+        _isHashing = true;
+        var hash = _hashes[0];
+        var pending = await txBuilder.isPending(hash);
+        if (!pending) {
+          _hashes.remove(hash);
+          for (var i = _messages.length - 1; i > -1; i--) {
+            if (_messages[i].hash == hash) {
+              _messages[i].status = 2;
+              await ChatUtil.updateChatList(_messages[i], _chatAddress);
+              break;
+            }
+          }
+          setState(() {});
         }
+        _isHashing = false;
+        _hashStatus();
+      } catch (e) {
+        _isHashing = false;
+        _hashStatus();
       }
-      setState(() {});
-    } else {
-      _hashStatus();
     }
   }
 
@@ -407,5 +409,34 @@ class _ChatScreenState extends State<ChatScreen> {
         break;
       }
     }
+  }
+
+  _updateList() async {
+    _timer = Timer.periodic(Duration(seconds: 1), (val) async {
+      val.cancel();
+      if (_sendEnableChecked && !_sendChatEnable) return;
+      var list = await txBuilder.getMessages(_myAddress, _chatAddress);
+      var update = false;
+      list.forEach((element) {
+        if (element.info.sender == _chatAddress &&
+            element.info.timestamp.compareTo(lastSendTime) > 0) {
+          update = true;
+          if (_messages.isEmpty ||
+              element.info.timestamp.compareTo(
+                      _messages[_messages.length - 1].info.timestamp) >
+                  0) {
+            ChatUtil.updateChatList(element, _chatAddress);
+          }
+          _messages.add(element);
+          lastSendTime = element.info.timestamp;
+        }
+      });
+      if (mounted) {
+        if (update) {
+          setState(() {});
+        }
+        _updateList();
+      }
+    });
   }
 }
