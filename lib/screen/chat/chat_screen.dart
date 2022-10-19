@@ -364,7 +364,7 @@ class _ChatScreenState extends State<ChatScreen> {
       _timer?.cancel();
       _timer = null;
     }
-    _timer = Timer.periodic(Duration(seconds: 1), (val) {
+    _timer = Timer.periodic(Duration(seconds: 2), (val) {
       if (_hashes.isEmpty) {
         _timer?.cancel();
         _timer = null;

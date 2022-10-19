@@ -1,10 +1,10 @@
 [
   {
-    "address": "0x67a9851d7e675ce24380001a46d207f769190f035e46574151b62b0089646edf",
+    "address": "0xdff1953195c189510a00139344c903ac22908bd35490c326990d1b940a51e93a",
     "nft": [
       {
         "token_id": "1904",
-        "owner": "0x67a9851d7e675ce24380001a46d207f769190f035e46574151b62b0089646edf",
+        "owner": "0xdff1953195c189510a00139344c903ac22908bd35490c326990d1b940a51e93a",
         "creator": "0xabf3630d0532fef81dfe610dd4def095070d91e344d475051e1c49da5e6d51c3",
         "collection_name": "BlueMove Bull v1",
         "token_name": "BlueMove Bull v1 #1904",
@@ -21,7 +21,7 @@
       },
       {
         "token_id": "2675",
-        "owner": "0x67a9851d7e675ce24380001a46d207f769190f035e46574151b62b0089646edf",
+        "owner": "0xdff1953195c189510a00139344c903ac22908bd35490c326990d1b940a51e93a",
         "creator": "0xabf3630d0532fef81dfe610dd4def095070d91e344d475051e1c49da5e6d51c3",
         "collection_name": "BlueMove Bull v1",
         "token_name": "BlueMove Bull v1 #2675",
@@ -38,7 +38,7 @@
       },
       {
         "token_id": "2795",
-        "owner": "0x67a9851d7e675ce24380001a46d207f769190f035e46574151b62b0089646edf",
+        "owner": "0xdff1953195c189510a00139344c903ac22908bd35490c326990d1b940a51e93a",
         "creator": "0xabf3630d0532fef81dfe610dd4def095070d91e344d475051e1c49da5e6d51c3",
         "collection_name": "BlueMove Bull v1",
         "token_name": "BlueMove Bull v1 #2675",
@@ -55,7 +55,7 @@
       },
       {
         "token_id": "105",
-        "owner": "0x67a9851d7e675ce24380001a46d207f769190f035e46574151b62b0089646edf",
+        "owner": "0xdff1953195c189510a00139344c903ac22908bd35490c326990d1b940a51e93a",
         "creator": "0xabf3630d0532fef81dfe610dd4def095070d91e344d475051e1c49da5e6d51c3",
         "collection_name": "SpiriNFT",
         "token_name": "SpiriNFT #105",
@@ -72,7 +72,7 @@
       },
       {
         "token_id": "102",
-        "owner": "0x67a9851d7e675ce24380001a46d207f769190f035e46574151b62b0089646edf",
+        "owner": "0xdff1953195c189510a00139344c903ac22908bd35490c326990d1b940a51e93a",
         "creator": "0xabf3630d0532fef81dfe610dd4def095070d91e344d475051e1c49da5e6d51c3",
         "collection_name": "SpiriNFT",
         "token_name": "SpiriNFT #102",

@@ -15,9 +15,9 @@ import 'package:gm/aptos/transaction/chat_message.dart';
 
 class TxBuilder {
 
-  static const String moduleId = "0xfaf52ae1b48f945014ab1ba2798f85498995848cedfb0fbd167fada7ccb2d66e";
+  static const String moduleId = "0xfaf52ae1b48f945014ab1ba2798f85498995848cedfb0fbd167fada7ccb2d66e::chat";
   static const String messageStoreResouceType = moduleId + "::MessageStore";
-  static const String allContactsResourceType = moduleId + "::chat::All_Contact";
+  static const String allContactsResourceType = moduleId + "::All_Contact";
 
   late AptosClient client;
   late CoinClient coinClient;
@@ -89,20 +89,20 @@ class TxBuilder {
   }
 
   Future<List<ChatMessage>> getMessages(String myAddress, String otherAddress) async {
-    final accountResource = await client.getAccountResouce(
-        myAddress,
-        messageStoreResouceType
-    );
-
-    final handle = accountResource["data"]["messages"]["handle"];
-
-    final tableItem = new TableItem(
-        "address",
-        "vector<$moduleId::Message>",
-        otherAddress
-    );
-
     try {
+      final accountResource = await client.getAccountResouce(
+          myAddress,
+          messageStoreResouceType
+      );
+
+      final handle = accountResource["data"]["messages"]["handle"];
+
+      final tableItem = new TableItem(
+          "address",
+          "vector<$moduleId::Message>",
+          otherAddress
+      );
+
       final messageData = await client.queryTableItem(
           handle,
           tableItem
@@ -115,7 +115,7 @@ class TxBuilder {
       return messageList;
     } catch(e) {
       dynamic err = e;
-      if (err.response.statusCode == 404) {
+      if (err.response.statusCode == 404 || err.response.statusCode == 400) {
         return <ChatMessage>[];
       }
       rethrow;
@@ -128,7 +128,7 @@ class TxBuilder {
       return data["type"] == messageStoreResouceType;
     } catch(e) {
       dynamic err = e;
-      if (err.response.statusCode == 404) {
+      if (err.response.statusCode == 404 || err.response.statusCode == 400) {
         return false;
       }
       rethrow;
