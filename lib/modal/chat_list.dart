@@ -1,5 +1,3 @@
-import 'package:intl/intl.dart';
-
 class ChatList {
   String address = '';
   String nftImg = '';
@@ -7,11 +5,9 @@ class ChatList {
   String content = '';
   bool newMatch = false;
 
-  String get showDate {
-    if (timestamp.isEmpty) return '';
-    var inputFormat = DateFormat('dd/MM/yyyy');
-    var dateTime = DateTime.fromMicrosecondsSinceEpoch(int.parse(timestamp));
-    return inputFormat.format(dateTime);
+  DateTime get dateTime {
+    if (timestamp.isEmpty) return DateTime.now();
+    return DateTime.fromMicrosecondsSinceEpoch(int.parse(timestamp));
   }
 
   ChatList({

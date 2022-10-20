@@ -21,6 +21,7 @@ class ChatMessage {
   // 1: pending, 2: done
   int status;
   String transferNum;
+  String showTime = '';
 
   ChatMessage(
     this.content,
@@ -28,6 +29,7 @@ class ChatMessage {
     this.status = 0,
     this.hash = '',
     this.transferNum = '',
+    this.showTime = '',
   });
 
   factory ChatMessage.fromJson(Map<String, dynamic> data) {
@@ -37,6 +39,7 @@ class ChatMessage {
       status: int.parse(data["status"] ?? "0"),
       hash: data["hash"] ?? '',
       transferNum: data["transferNum"] ?? '',
+      showTime: data["showTime"] ?? '',
     );
   }
 
@@ -45,6 +48,7 @@ class ChatMessage {
       "content": content,
       "hash": hash,
       "transferNum": transferNum,
+      "showTime": showTime,
       "status": status,
       "info": info.toJson()
     };

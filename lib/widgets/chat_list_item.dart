@@ -174,7 +174,7 @@ class ChatListItem extends StatelessWidget {
                                 padding: EdgeInsets.only(top: 20.w),
                                 alignment: Alignment.topRight,
                                 child: Text(
-                                  chat.showDate,
+                                  chatShowTime(chat.dateTime, DateTime.now()),
                                   style: TextStyle(
                                     fontSize: 14.sp,
                                     color: AppTheme.colorFontThree,

@@ -4,6 +4,7 @@ import 'package:decimal/decimal.dart';
 import 'package:flutter/services.dart';
 import 'package:gm/data/db/storage_manager.dart';
 import 'package:gm/modal/account_nft_list.dart';
+import 'package:intl/intl.dart';
 
 interceptFormat(String? content, {int length = 6}) {
   if (content == null) return '';
@@ -37,6 +38,32 @@ Future<List<AccountNftList>> getAccountNftList() async {
     });
   }
   return list;
+}
+
+chatShowTime(DateTime createAt, DateTime now) {
+  final yesterday = now.subtract(new Duration(days: 1));
+  final sevenDaysFromNow = now.subtract(new Duration(days: 7));
+  DateFormat dateFormat = DateFormat("HH:mm");
+  var time = '';
+  if (createAt.isAfter(sevenDaysFromNow)) {
+    if (createAt.day == now.day) {
+      time = dateFormat.format(createAt);
+    } else if (createAt.day == yesterday.day) {
+      time = "Yesterday " + dateFormat.format(createAt);
+    } else {
+      dateFormat = DateFormat("EEEE HH:mm");
+      time = dateFormat.format(createAt);
+    }
+  } else {
+    if (createAt.year == now.year) {
+      dateFormat = DateFormat("MM/dd HH:mm");
+      time = dateFormat.format(createAt);
+    } else {
+      dateFormat = DateFormat("YYYY/MM/dd HH:mm");
+      time = dateFormat.format(createAt);
+    }
+  }
+  return time;
 }
 
 extension SizeExtension on Decimal {

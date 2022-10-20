@@ -59,6 +59,7 @@ class _ChatScreenState extends State<ChatScreen> {
   var _isHashing = false;
 
   var lastSendTime = '';
+  DateTime? _lastShowTime;
 
   @override
   void initState() {
@@ -121,6 +122,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                     status: 1,
                   );
+                  _updateLastTime(chat);
                   _messages.add(chat);
                   _waitMessages.add(chat);
                   _textEditingController.text = '';
@@ -137,6 +139,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     status: 1,
                     transferNum: amount,
                   );
+                  _updateLastTime(chat);
                   _messages.add(chat);
                   _waitMessages.add(chat);
                   _textEditingController.text = '';
@@ -190,9 +193,9 @@ class _ChatScreenState extends State<ChatScreen> {
       ChatUtil.updateChatList(list[list.length - 1], _chatAddress);
       lastSendTime = list[list.length - 1].info.timestamp;
     }
-    setState(() {
-      _messages = list;
-    });
+    _messages = list;
+    _dealShowDataTime();
+    setState(() {});
   }
 
   Future<bool> _checkEnables() async {
@@ -410,8 +413,9 @@ class _ChatScreenState extends State<ChatScreen> {
                   0) {
             ChatUtil.updateChatList(element, _chatAddress);
           }
-          _messages.add(element);
+          _updateLastTime(element);
           lastSendTime = element.info.timestamp;
+          _messages.add(element);
         }
       });
       if (mounted) {
@@ -421,5 +425,22 @@ class _ChatScreenState extends State<ChatScreen> {
         _updateList();
       }
     });
+  }
+
+  _dealShowDataTime() {
+    final now = DateTime.now();
+    for (var i = 0; i < _messages.length; i++) {
+      _updateLastTime(_messages[i], now: now);
+    }
+  }
+
+  _updateLastTime(ChatMessage message, {DateTime? now}) {
+    var intCreateAt = int.parse(message.info.timestamp);
+    var createAt = DateTime.fromMicrosecondsSinceEpoch(intCreateAt);
+    if (_lastShowTime == null ||
+        createAt.isAfter(_lastShowTime!.add(Duration(minutes: 5)))) {
+      _lastShowTime = createAt;
+      message.showTime = chatShowTime(_lastShowTime!, now ?? DateTime.now());
+    }
   }
 }

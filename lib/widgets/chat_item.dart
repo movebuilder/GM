@@ -23,18 +23,33 @@ class ChatItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.fromLTRB(15.w, 0, 15.w, 15.w),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: message.info.sender == address
-            ? [
-                Expanded(child: Container()),
-                _buildMessage(true),
-                _buildAvatar(true),
-              ]
-            : [
-                _buildAvatar(false),
-                _buildMessage(false),
-              ],
+      child: Column(
+        children: [
+          if (message.showTime.isNotEmpty)
+            Padding(
+              padding: EdgeInsets.only(bottom: 15.w),
+              child: Text(
+                message.showTime,
+                style: TextStyle(
+                  color: AppTheme.colorGreyTwo,
+                  fontSize: 14.sp,
+                ),
+              ),
+            ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: message.info.sender == address
+                ? [
+                    Expanded(child: Container()),
+                    _buildMessage(true),
+                    _buildAvatar(true),
+                  ]
+                : [
+                    _buildAvatar(false),
+                    _buildMessage(false),
+                  ],
+          ),
+        ],
       ),
     );
   }
