@@ -5,7 +5,7 @@ import 'package:gm/route/routes.dart';
 import 'package:gm/util/image_utils.dart';
 import 'package:gm/util/screen_util.dart';
 import 'package:gm/util/toast_util.dart';
-import 'package:gm/widgets/gm_appbar.dart';
+import 'package:gm/widgets/gm_scaffold.dart';
 import 'package:gm/widgets/gm_textfield.dart';
 import 'package:gm/widgets/line_button.dart';
 
@@ -19,49 +19,38 @@ class _SecurityScreenState extends State<SecurityScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Container(
-              alignment: Alignment.center,
-              margin: EdgeInsets.only(top: 94.w),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  imageUtils('secret.svg', width: 80),
-                  SizedBox(height: 54.w),
-                  GMTextField(
-                    hintText: S.current.current_password,
-                    width: 320.w,
-                    padding: EdgeInsets.only(left: 15.w),
-                    showPassword: true,
-                    isPassword: true,
-                    height: 55.w,
-                    text: _password,
-                    leftIcon: 'assets/svgs/password.svg',
-                    onChange: (value) {
-                      _password = value;
-                    },
-                  ),
-                  SizedBox(height: 23.w),
-                  LineButton(
-                    text: S.current.confirm,
-                    width: 320,
-                    onTap: () {
-                      _decrypt();
-                    },
-                  )
-                ],
-              ),
+    return GmScaffold(
+      title: S.current.security,
+      body: Container(
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            imageUtils('secret.svg', width: 80),
+            SizedBox(height: 54.w),
+            GMTextField(
+              hintText: S.current.current_password,
+              width: 320.w,
+              padding: EdgeInsets.only(left: 15.w),
+              showPassword: true,
+              isPassword: true,
+              height: 55.w,
+              text: _password,
+              leftIcon: 'assets/svgs/password.svg',
+              onChange: (value) {
+                _password = value;
+              },
             ),
-          ),
-          Positioned(
-            child: GmAppBar(title: S.current.security),
-            top: 0,
-          ),
-        ],
+            SizedBox(height: 23.w),
+            LineButton(
+              text: S.current.confirm,
+              width: 320,
+              onTap: () {
+                _decrypt();
+              },
+            )
+          ],
+        ),
       ),
     );
   }

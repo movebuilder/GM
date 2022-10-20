@@ -8,7 +8,6 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:gm/aptos/transaction/chat_message.dart';
 import 'package:gm/aptos/transaction/tx_builder.dart';
 import 'package:gm/aptos/wallet/key_manager.dart';
-import 'package:gm/common/app_theme.dart';
 import 'package:gm/data/db/storage_manager.dart';
 import 'package:gm/util/chat_util.dart';
 import 'package:gm/util/common_util.dart';
@@ -17,7 +16,7 @@ import 'package:gm/util/toast_util.dart';
 import 'package:gm/widgets/chat_item.dart';
 import 'package:gm/widgets/chat_textfield.dart';
 import 'package:gm/widgets/expanded_viewport.dart';
-import 'package:gm/widgets/gm_appbar.dart';
+import 'package:gm/widgets/gm_scaffold.dart';
 
 class ChatScreen extends StatefulWidget {
   final String chatAddress;
@@ -99,70 +98,54 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.colorWhite,
+    return GmScaffold(
+      title: interceptFormat(_chatAddress, length: 5),
       body: KeyboardDismissOnTap(child:
           KeyboardVisibilityBuilder(builder: (context, isKeyboardVisible) {
-        return Stack(
-          children: [
-            Positioned(
-              top: 0,
-              child: GmAppBar(
-                title: interceptFormat(_chatAddress, length: 5),
-              ),
-            ),
-            Positioned(
-              top: 94.w,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: Container(
-                child: Column(
-                  children: <Widget>[
-                    _buildMessages(),
-                    ChatTextField(
-                      isKeyboardVisible: isKeyboardVisible,
-                      textEditingController: _textEditingController,
-                      focusNode: _focusNode,
-                      sendMsg: () {
-                        _scrollController.jumpTo(0.0);
-                        var msg = _textEditingController.text;
-                        var chat = ChatMessage(
-                          msg,
-                          MessageInfo(
-                            _myAddress,
-                            DateTime.now().microsecondsSinceEpoch.toString(),
-                          ),
-                          status: 1,
-                        );
-                        _messages.add(chat);
-                        _waitMessages.add(chat);
-                        _textEditingController.text = '';
-                        setState(() {});
-                        _sendMessage();
-                      },
-                      transfer: (amount) {
-                        var chat = ChatMessage(
-                          '',
-                          MessageInfo(
-                            _myAddress,
-                            DateTime.now().microsecondsSinceEpoch.toString(),
-                          ),
-                          status: 1,
-                          transferNum: amount,
-                        );
-                        _messages.add(chat);
-                        _waitMessages.add(chat);
-                        _textEditingController.text = '';
-                        setState(() {});
-                        _transfer();
-                      },
+        return Container(
+          child: Column(
+            children: <Widget>[
+              _buildMessages(),
+              ChatTextField(
+                isKeyboardVisible: isKeyboardVisible,
+                textEditingController: _textEditingController,
+                focusNode: _focusNode,
+                sendMsg: () {
+                  _scrollController.jumpTo(0.0);
+                  var msg = _textEditingController.text;
+                  var chat = ChatMessage(
+                    msg,
+                    MessageInfo(
+                      _myAddress,
+                      DateTime.now().microsecondsSinceEpoch.toString(),
                     ),
-                  ],
-                ),
+                    status: 1,
+                  );
+                  _messages.add(chat);
+                  _waitMessages.add(chat);
+                  _textEditingController.text = '';
+                  setState(() {});
+                  _sendMessage();
+                },
+                transfer: (amount) {
+                  var chat = ChatMessage(
+                    '',
+                    MessageInfo(
+                      _myAddress,
+                      DateTime.now().microsecondsSinceEpoch.toString(),
+                    ),
+                    status: 1,
+                    transferNum: amount,
+                  );
+                  _messages.add(chat);
+                  _waitMessages.add(chat);
+                  _textEditingController.text = '';
+                  setState(() {});
+                  _transfer();
+                },
               ),
-            ),
-          ],
+            ],
+          ),
         );
       })),
     );

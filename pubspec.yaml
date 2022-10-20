@@ -32,7 +32,7 @@ dependencies:
   cached_network_image: 3.2.0
   flutter_swiper_plus: 2.0.4
   flutter_keyboard_visibility: ^5.2.0
-  flutter_inappwebview: 5.4.0
+  flutter_inappwebview: 5.5.0
   flutter_easyloading: 3.0.5
   fluro: ^2.0.3
   flutter_svg: ^1.0.3

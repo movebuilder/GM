@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:gm/common/app_theme.dart';
-import 'package:gm/widgets/gm_appbar.dart';
+import 'package:gm/widgets/gm_scaffold.dart';
 
 class WebScreen extends StatefulWidget {
   final String url;
@@ -21,33 +21,30 @@ class _WebScreenState extends State<WebScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
+    return GmScaffold(
+      title: widget.title,
+      body: Stack(
         children: [
-          GmAppBar(title: widget.title),
-          Expanded(
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: InAppWebView(
-                    initialUrlRequest: URLRequest(
-                      url: Uri.parse(widget.url),
-                    ),
-                    onProgressChanged:
-                        (InAppWebViewController controller, int progress) {
-                      setState(() {
-                        debugPrint("progress: $progress");
-                        this.progress = progress / 100;
-                      });
-                    },
-                  ),
-                ),
-                progress >= 1.0
-                    ? PreferredSize(
+          Positioned.fill(
+            child: InAppWebView(
+              initialUrlRequest: URLRequest(
+                url: Uri.parse(widget.url),
+              ),
+              onProgressChanged:
+                  (InAppWebViewController controller, int progress) {
+                setState(() {
+                  debugPrint("progress: $progress");
+                  this.progress = progress / 100;
+                });
+              },
+            ),
+          ),
+          progress >= 1.0
+              ? PreferredSize(
                   child: Container(),
                   preferredSize: Size.zero,
                 )
-                    : PreferredSize(
+              : PreferredSize(
                   child: SizedBox(
                     child: LinearProgressIndicator(
                       value: progress,
@@ -59,9 +56,6 @@ class _WebScreenState extends State<WebScreen> {
                   ),
                   preferredSize: Size.fromHeight(2),
                 ),
-              ],
-            ),
-          ),
         ],
       ),
     );

@@ -91,15 +91,13 @@ class _ChatTextFieldState extends State<ChatTextField> {
       ),
       child: Row(
         children: [
-          SizedBox(width: 15.w),
-          if (_showTransferIcon)
-            Padding(
-              padding: EdgeInsets.only(right: 10.w),
-              child: imageUtils(
-                'aptos.svg',
-                width: 20.w,
-              ),
-            ),
+          Padding(
+            padding: EdgeInsets.only(
+                left: 15.w, right: _showTransferIcon ? 10.w : 0),
+            child: _showTransferIcon
+                ? imageUtils('aptos.svg', width: 20.w, height: 20.w)
+                : Container(),
+          ),
           Expanded(
             child: TextField(
               controller: textEditingController,
