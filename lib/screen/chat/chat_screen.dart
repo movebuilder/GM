@@ -245,11 +245,11 @@ class _ChatScreenState extends State<ChatScreen> {
           try {
             var enable = await _checkEnables();
             if (!enable) return;
-            var m = await txBuilder.sendMessage(
+            var hash = await txBuilder.sendMessage(
                 account!, _chatAddress, element.content);
-            if (m['hash'].toString().length > 0) {
-              _hashes.add(m['hash']);
-              _messages[_messages.length - 1].hash = m['hash'];
+            if (hash.length > 0) {
+              _hashes.add(hash);
+              _messages[_messages.length - 1].hash = hash;
             }
             _updateMessage(element, 2);
             _hashStatus();

@@ -36,40 +36,17 @@ class TxBuilder {
     return await getBalanceByAddress(account.address);
   }
 
-  Future<dynamic> transferAptos(
-    AptosAccount sender,
-    String receiverAddress,
-    String amount, {
-    String? gasPrice,
-    String? maxGasAmount,
-    String? expirationTimestamp,
-  }) async {
-    const typeArgs = "0x1::aptos_coin::AptosCoin";
-    const moduleId = "0x1::coin";
-    const moduleFunc = "transfer";
-    final entryFunc = EntryFunction.natural(
-      moduleId,
-      moduleFunc,
-      [TypeTagStruct(StructTag.fromString(typeArgs))],
-      [bcsToBytes(AccountAddress.fromHex(receiverAddress)), bcsSerializeUint64(BigInt.parse(amount))],
-    );
-    final entryFunctionPayload = TransactionPayloadEntryFunction(entryFunc);
-
-    final payload = Payload(
-        "entry_function_payload",
-        "$moduleId::$moduleFunc",
-        [typeArgs],
-        [receiverAddress, amount.toString()]
-    );
-
-    final result = _submitTx(
-        sender,
-        payload,
-        entryFunctionPayload,
-        gasPrice: gasPrice,
-        maxGasAmount: maxGasAmount,
-        expirationTimestamp: expirationTimestamp);
-    return result;
+  Future<String> transferAptos(
+      AptosAccount sender,
+      String receiverAddress,
+      String amount, {
+        String? gasPrice,
+        String? maxGasAmount,
+        String? expirationTimestamp,
+      }) async {
+    final coinClient = CoinClient(client);
+    final txHash = await coinClient.transfer(sender, receiverAddress, BigInt.parse(amount));
+    return txHash;
   }
 
   /// CHAT MESSAGE ///
@@ -135,20 +112,17 @@ class TxBuilder {
     }
   }
 
-  Future<dynamic> enableChat(
+  Future<String> enableChat(
       AptosAccount sender,
       {String? gasPrice,
       String? maxGasAmount,
       String? expirationTimestamp}) async {
 
-    const moduleFunc = "init_store";
-    final entryFunc = EntryFunction.natural(moduleId, moduleFunc, [], []);
+    final entryFunc = EntryFunction.natural(moduleId, "init_store", [], []);
     final entryFunctionPayload = TransactionPayloadEntryFunction(entryFunc);
-    final payload = Payload("entry_function_payload", "$moduleId::$moduleFunc", [], []);
 
     final result = _submitTx(
         sender,
-        payload,
         entryFunctionPayload,
         gasPrice: gasPrice,
         maxGasAmount: maxGasAmount,
@@ -156,31 +130,23 @@ class TxBuilder {
     return result;
   }
 
-  Future<dynamic> sendMessage(
+  Future<String> sendMessage(
       AptosAccount sender,
       String receiverAddress,
       String message,
       {String? gasPrice,
       String? maxGasAmount,
       String? expirationTimestamp}) async {
-    const moduleFunc = "send";
     final entryFunc = EntryFunction.natural(
       moduleId,
-      moduleFunc,
+      "send",
       [],
       [bcsToBytes(AccountAddress.fromHex(receiverAddress)), bcsSerializeStr(message)]
     );
     final entryFunctionPayload = TransactionPayloadEntryFunction(entryFunc);
-    final payload = Payload(
-        "entry_function_payload",
-        "$moduleId::$moduleFunc",
-        [],
-        [receiverAddress, HexString.fromBuffer(Uint8List.fromList(utf8.encode(message))).hex()]
-    );
 
     final result = _submitTx(
         sender,
-        payload,
         entryFunctionPayload,
         gasPrice: gasPrice,
         maxGasAmount: maxGasAmount,
@@ -207,52 +173,24 @@ class TxBuilder {
     return gasPrice;
   }
 
-  Future<dynamic> _submitTx(
+  Future<String> _submitTx(
       AptosAccount sender,
-      Payload payload,
       TransactionPayload entryFunctionPayload,
       {String? gasPrice,
       String? maxGasAmount,
       String? expirationTimestamp}
   ) async {
-    final senderAddress = sender.address;
-    final accountInfo = await client.getAccount(senderAddress);
-    final ledgerInfo = await client.getLedgerInfo();
-    final sequenceNumber = int.parse(accountInfo.sequenceNumber);
-
     gasPrice ??= (await client.estimateGasPrice()).toString();
     maxGasAmount ??= "2000";
     expirationTimestamp ??= DateTime.now().add(Duration(minutes: 1)).millisecondsSinceEpoch.toString();
 
-    final rawTx = RawTransaction(
-        AccountAddress.fromHex(senderAddress),
-        BigInt.from(sequenceNumber),
+    final txHash = await client.generateSignSubmitTransaction(
+        sender,
         entryFunctionPayload,
-        BigInt.parse(maxGasAmount),
-        BigInt.parse(gasPrice),
-        BigInt.parse(expirationTimestamp),
-        ChainId(ledgerInfo["chain_id"]));
-
-    final txnBuilder = TransactionBuilderEd25519(
-      Uint8List.fromList(sender.signingKey.publicKey.bytes),
-          (signingMessage) => Ed25519Signature(ed25519.sign(sender.signingKey.privateKey, signingMessage).sublist(0, 64)),
+        maxGasAmount: BigInt.parse(maxGasAmount),
+        gasUnitPrice: BigInt.parse(gasPrice),
+        expireTimestamp: BigInt.parse(expirationTimestamp)
     );
-
-    final signedTx = txnBuilder.rawToSigned(rawTx);
-    final txEdd25519 = signedTx.authenticator as TransactionAuthenticatorEd25519;
-    final signature = txEdd25519.signature.value;
-
-    final tx = TransactionRequest(
-        sender: senderAddress,
-        sequenceNumber: rawTx.sequenceNumber.toString(),
-        maxGasAmount: rawTx.maxGasAmount.toString(),
-        gasUnitPrice: rawTx.gasUnitPrice.toString(),
-        expirationTimestampSecs: rawTx.expirationTimestampSecs.toString(),
-        payload: payload,
-        signature: Signature("ed25519_signature", sender.pubKey().hex(), "0x"+HEX.encode(signature)));
-
-    final result = await client.submitTransaction(tx);
-    debugPrint(result.toString());
-    return result;
+    return txHash;
   }
 }
